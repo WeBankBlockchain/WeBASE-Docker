@@ -52,8 +52,12 @@ cp -r sdk/ node*/
 启动容器的指令如下，请参考此指令，修改k8s所使用的yaml文件。其中网络模式，脚本是为了简单使用了host模式，云这边使用端口映射即可，可自行替换自己需要的镜像名。
 
 ```bash
-docker run -d --rm --name 172.17.0.1-node0 -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-gm-1.2.3 
+docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-gm-1.2.3 
 ```
+
+5.检查
+ docker exec -it {containerId} /bin/bash
+ front日志在/dist/log下，可检查日志看是否启动报错。
 
 
 ### 2. 签发合法证书给SDK使用
