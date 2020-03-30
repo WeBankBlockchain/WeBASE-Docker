@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: peer4.bcosorg1.bcos-test
+  name: peer4.bcosorg1.bcos-test
+  namespace: bcos-test
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: peer4.bcosorg1.bcos-test
+    spec:
+      containers:
+      - name: peer4-bcosorg1
+        image: fiscoorg/front:v0.8
+        ports:
+        - containerPort: 8545
+        - containerPort: 20200
+        - containerPort: 30300
+        - containerPort: 5002
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: peer4-bcosorg1-conf
+        - mountPath: /opt
+          name: peer4-bcosorg1-data
+        - mountPath: /dist/log
+          name: peer4-bcosorg1-frontlog
+        - mountPath: /dist/conf/application.yml
+          name: peer4-bcosorg1-appconf
+        workingDir: /data
+      restartPolicy: Always
+      volumes:
+      - name: peer4-bcosorg1-conf
+        hostPath:
+          path: /data/nodes/172.18.255.25/node0
+      - name: peer4-bcosorg1-frontlog
+        hostPath:
+          path: /data/nodes/172.18.255.25/frontlog
+      - name: peer4-bcosorg1-appconf
+        hostPath:
+          path: /data/nodes/application.yml
+      - name: peer4-bcosorg1-data
+        persistentVolumeClaim:
+          claimName: peer4-bcosorg1-pvc-bcos-test
+status: {}
