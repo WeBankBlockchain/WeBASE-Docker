@@ -2,8 +2,8 @@
 ## 脚本使用说明：
 
 1 检查Dockerfile第一行，看是否需要修改底层镜像。
-2 拷贝要打镜像的front的dist到docker目录下.(国密时务必保证applicaiton.yml的encryptType为1)
-3 拷贝jdk-8u211-linux-x64.tar.gz到项目目录下。
+2 打国密镜像时务必保证applicaiton.yml的encryptType为1
+3 拷贝jdk-8u211-linux-x64.tar.gz到docker目录下。
 4  sh docker-build.sh v1.0 （v1.0 是tag）
 
 
