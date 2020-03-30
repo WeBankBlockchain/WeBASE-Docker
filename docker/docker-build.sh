@@ -3,8 +3,8 @@
 # wget https://www.fisco.com.cn/cdn/webase/releases/download/v1.2.3/webase-front.zip
 
   git clone -b $1 https://github.com/WeBankFinTech/WeBASE-Front.git && cd  WeBASE-Front
-  chmod +x ./gradlew
- ./gradlew build -x test
+
+  sh gradlew build -x test
   cp -r dist ../
   cd .. && rm -rf WeBASE-Front
   # 可以自动拷贝dist，注释上面部分代码即可。
