@@ -5,6 +5,7 @@
 2 打国密镜像时务必保证applicaiton.yml的encryptType为1
 3 拷贝jdk-8u211-linux-x64.tar.gz到docker目录下。
 4  sh docker-build.sh bsn v1.0 （bsn 是分支， v1.0 是tag）
+5 如果拉代码过慢，自行注释掉docker-build.sh前五行代码。
 
 
 
