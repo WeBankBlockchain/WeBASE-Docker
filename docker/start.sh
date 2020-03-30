@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #cd /fisco/`hostname -s`/node0
 #fisco-bcos -c config.ini
