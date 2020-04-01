@@ -66,9 +66,9 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
  6 修改application.yml 
  
   如果需要修改applicaiton的配置，
-  需要将docker/dist/conf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,修改好后。
+  需要将frontconf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,修改好后。
  ```bash
-   cp -r dist/conf/*  node0/frontconf
+   cp -r frontconf node0/
   ```
   启动镜像命令如下
   ```bash
