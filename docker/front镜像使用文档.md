@@ -49,7 +49,7 @@ cp -r sdk/ node*/
 ```
 
 4. 启动
-启动容器的指令如下，请参考此指令，修改k8s所使用的yaml文件。其中网络模式，脚本是为了简单使用了host模式，云这边使用端口映射即可，可自行替换自己需要的镜像名。
+启动容器的指令如下，请参考此指令，修改k8s所使用的yaml文件。其中网络模式，脚本是为了简单使用了host模式，云这边使用端口映射即可。mac不支持host模式 用-P代替。 可自行替换自己需要的镜像名。
 
 ```bash
 docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
@@ -64,9 +64,9 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
 6. 修改application.yml
   如果需要修改applicaiton的配置，
   需要将docker目录下的dist/conf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,修改好后。
-   ```bash
+ ```bash
    cp -r dist/conf/*  node0/frontconf
-    ```
+  ```
   启动镜像命令如下
   ```bash
    docker run -d -P -v $PWD:/data -v $PWD/frontconf:/dist/conf -w=/data fiscoorg/front:bsn-0.2.0-gm
