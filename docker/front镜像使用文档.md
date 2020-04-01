@@ -22,7 +22,7 @@
 
 举例，如果要生成一个机构名为test，4个节点分别位于`172.17.0.1-172.17.0.4`，单群组模式，则操作如下。
 
-1. 准备配置文件
+ 1 准备配置文件
 
 ```bash
 # 1表示群组1
@@ -34,30 +34,46 @@ cat  > nodeconf << EOF
 EOF
 ```
 
-2. 生成配置文件
+ 2 生成配置文件
 
 ```bash
 # -p 指定节点所使用端口的起始值，同一机器上多节点端口递增。
 # -d 使用docker模式
 # -g 国密
-bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d
+bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 ```
 
-3. 因为front需要sdk证书才能启动， 拷贝sdk目录内容到各个节点目录。 如下：
+ 3  因为front需要sdk证书才能启动， 拷贝sdk目录内容到各个节点目录。 如下：
 ```bash
 cp -r sdk/ node*/
 ```
 
-4. 启动
-启动容器的指令如下，请参考此指令，修改k8s所使用的yaml文件。其中网络模式，脚本是为了简单使用了host模式，云这边使用端口映射即可，可自行替换自己需要的镜像名。
+ 4 启动 
+ 
+ 启动容器的指令如下，请参考此指令，修改k8s所使用的yaml文件。其中网络模式，脚本是为了简单使用了host模式，云这边使用端口映射即可。mac不支持host模式 用-P代替。 可自行替换自己需要的镜像名。
 
 ```bash
-docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-gm-1.2.3 
+docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
 ```
 
-5.检查
+ 5 检查 
+  
+ docker ps 查看进程
  docker exec -it {containerId} /bin/bash
+ 容器里执行/usr/local/bin/fisco -v 检查节点版本是否正确。
  front日志在/dist/log下，可检查日志看是否启动报错。
+ 
+ 6 修改application.yml 
+ 
+  如果需要修改applicaiton的配置，
+  需要将docker/dist/conf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,修改好后。
+ ```bash
+   cp -r dist/conf/*  node0/frontconf
+  ```
+  启动镜像命令如下
+  ```bash
+   docker run -d -P -v $PWD:/data -v $PWD/frontconf:/dist/conf -w=/data fiscoorg/front:bsn-0.2.0-gm
+  ```
 
 
 ### 2. 签发合法证书给SDK使用

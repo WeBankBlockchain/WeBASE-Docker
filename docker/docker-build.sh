@@ -7,7 +7,7 @@
   cp -r dist ../
   cd .. && rm -rf WeBASE-Front
   # 可以自动拷贝dist，注释上面部分代码即可。
-
+#---------------------------------------------------------
   cp ./start.sh ./dist/
   cp -r ./dist/conf_template ./dist/conf
 
