@@ -40,7 +40,7 @@ EOF
 # -p 指定节点所使用端口的起始值，同一机器上多节点端口递增。
 # -d 使用docker模式
 # -g 国密
-bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d
+bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 ```
 
 3. 因为front需要sdk证书才能启动， 拷贝sdk目录内容到各个节点目录。 如下：
@@ -52,12 +52,25 @@ cp -r sdk/ node*/
 启动容器的指令如下，请参考此指令，修改k8s所使用的yaml文件。其中网络模式，脚本是为了简单使用了host模式，云这边使用端口映射即可，可自行替换自己需要的镜像名。
 
 ```bash
-docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-gm-1.2.3 
+docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
 ```
 
-5.检查
+5. 检查
+ docker ps 查看进程
  docker exec -it {containerId} /bin/bash
+ 容器里执行/usr/local/bin/fisco -v 检查节点版本是否正确。
  front日志在/dist/log下，可检查日志看是否启动报错。
+ 
+6. 修改application.yml
+  如果需要修改applicaiton的配置，
+  需要将docker目录下的dist/conf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,修改好后。
+   ```bash
+   cp -r dist/conf/*  node0/frontconf
+    ```
+  启动镜像命令如下
+  ```bash
+   docker run -d -P -v $PWD:/data -v $PWD/frontconf:/dist/conf -w=/data fiscoorg/front:bsn-0.2.0-gm
+  ```
 
 
 ### 2. 签发合法证书给SDK使用
