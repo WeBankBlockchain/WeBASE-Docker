@@ -40,7 +40,8 @@ EOF
 # -p 指定节点所使用端口的起始值，同一机器上多节点端口递增。
 # -d 使用docker模式
 # -g 国密
-bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
+# -S 资源统计
+bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 ```
 
  3  因为front需要sdk证书才能启动， 拷贝sdk目录内容到各个节点目录。 如下：
