@@ -60,19 +60,19 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
   
  docker ps 查看进程
  docker exec -it {containerId} /bin/bash
- 容器里执行/usr/local/bin/fisco -v 检查节点版本是否正确。
- front日志在/dist/log下，可检查日志看是否启动报错。
+ 容器里执行/usr/local/bin/fisco-bcos -v 检查节点版本是否正确。
+ front相关文件在容器的/dist目录下，日志在/dist/log下，可检查日志看是否启动报错。
  
- 6 修改application.yml 
+ 6 修改application.yml 和log配置
  
-  如果需要修改applicaiton的配置，
-  需要将docker/dist/conf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,修改好后。
+  如果需要修改applicaiton的配置或日志文件配置
+  需要将frontconf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,log4j2.xml,修改好后。
  ```bash
-   cp -r dist/conf/*  node0/frontconf
+   cp -r frontconf node0/
   ```
   启动镜像命令如下
   ```bash
-   docker run -d -P -v $PWD:/data -v $PWD/frontconf:/dist/conf -w=/data fiscoorg/front:bsn-0.2.0-gm
+   docker run -d  -v $PWD:/data -v $PWD/frontconf:/dist/conf --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
   ```
 
 
