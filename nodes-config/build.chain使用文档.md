@@ -74,6 +74,8 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
   ```bash
    docker run -d  -v $PWD:/data -v $PWD/frontconf:/dist/conf --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
   ```
+
+
 ### 2. 签发合法证书给SDK使用
 
 **build_chain建链时使用自签ca，所有ca.key以及机构私钥位于nodes/cert目录**，请妥善保管**nodes/cert目录**中的文件。
@@ -83,11 +85,7 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
 ```bash
 # -c指定机构证书及私钥所在路径
 # -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥
-非国密
 bash gen_node_cert.sh -c nodes/cert/test -o newNode
-
-国密
-bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
 ```
 
 ### 3. 为群组1扩容节点
@@ -95,17 +93,99 @@ bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
 1. 根据步骤5为新节点生成证书，拷贝下述文件到新节点文件夹。
 
 ```bash
-非国密
 nodes/172.17.0.1/node0/config.ini >> newNode/config.ini
 nodes/172.17.0.1/node0/conf/group.1.genesis >> newNode/conf/group.1.genesis
 nodes/172.17.0.1/node0/conf/group.1.ini >> newNode/conf/group.1.ini
-
-国密
-nodes/172.17.0.1/node0/config.ini >> newNodeGm/config.ini
-nodes/172.17.0.1/node0/conf/group.1.genesis >> newNodeGm/conf/group.1.genesis
-nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
-
 ```
 
 2. 修改新节点config.ini监听的IP和端口为正确的IP和端口
 3. 使用docker启动新节点
+4. 通过console将新节点加入群组1，请参考[这里](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/console.html#addsealer)和[这里](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/node_management.html#id7)
+5. 将新节点的P2P配置中的IP和Port加入原有节点的config.ini中的[p2p]字段。假设新节点IP:Port为172.17.0.5:30300则，修改后的[P2P]配置为
+```bash
+[p2p]
+    listen_ip=0.0.0.0
+    listen_port=30300
+    ;enable_compress=true
+    ; nodes to connect
+    node.0=172.17.0.1:30300
+    node.1=172.17.0.2:30300
+    node.2=172.17.0.3:30300
+    node.3=172.17.0.4:30300
+    node.3=172.17.0.5:30300
+```
+
+### 4. 增加群组
+
+**generateGroup**
+
+生成群组所需的所有文件，放到conf目录下
+
+请求
+
+* method：generateGroup
+* params：[groupid, timestamp, ["xxxxxxxxxxxxx0","xxxxxxxxxxxxx1","xxxxxxxxxxxxx2","xxxxxxxxxxxxx3"]]   groupID和nodeid的列表
+
+``` shell
+curl -X POST --data '{"jsonrpc":"2.0","method":"generateGroup","params":[3, 1575876929000, ["xxxxxxxxxxxxx0","xxxxxxxxxxxxx1","xxxxxxxxxxxxx2","xxxxxxxxxxxxx3"]] ,"id":1}' http://127.0.0.1:8545 |jq
+```
+
+返回
+
+* error：字符串
+  * "0x0"：成功
+  * "0x1"：群组已存在
+  * "0x2"：群组创世块文件存在
+  * "0x3"：群组配置文件存在
+  * "0x4"：传参错误
+  * "0x5"：内部错误
+  * "0x6"：此未与相应节点建立连接
+* message：字符串，描述
+
+``` json
+{
+    "id": 1, 
+    "jsonrpc": "2.0", 
+    "result": {
+        "code": "0x0",
+        "message": "success"       
+    }
+}
+```
+
+**startGroup**
+
+检查群组依赖的文件，发送启动群组请求，是否启动成功需通过getGroupList来查
+
+请求
+
+- method：startGroup
+- params：[groupid]   
+
+```shell
+curl -X POST --data '{"jsonrpc":"2.0","method":"startGroup","params":[3] ,"id":1}' http://127.0.0.1:8545 |jq
+```
+
+返回
+
+- error：字符串
+  - "0x0"：请求成功（不代表群组启动，是否启动需要用`getGroupList`来查）
+  - "0x1"： group已经启动
+  - "0x2"：创世块文件不存在
+  - "0x3"：群组配置文件不存在
+  - "0x4"：创世块文件配置错误
+  - "0x5"：群组配置文件配置错误
+  - "0x6"：传参错误
+  - "0x7"：内部错误
+- message：字符串，错误描述
+
+```json
+{
+    "id": 1, 
+    "jsonrpc": "2.0", 
+    "result": {
+        "code": "0x0",
+        "message": "success"       
+    }
+}
+```
