@@ -12,7 +12,7 @@
  
  ### 1. 镜像简要说明
  front镜像包含了底层镜像和WeBASE-Front的代码,将节点和节点前置放在一起。通过镜像搭建区块链网络需要通过[build_chain.sh](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/build_chain.html) 生成各节点的配置信息。
- 搭建区块链网络前建议阅读以下两部分内容。
+ 搭建区块链网络前建议阅读以下两部分内容并熟悉buildchain的使用。
 
  #### 1.1节点网络说明
  
@@ -23,7 +23,7 @@
  
  ### 1.2 节点依赖说明
  
- **下述配置文件，脚本会自动生成，放置在节点目录下，启动容器时挂载即可**。
+ **buildchain脚本会自动生成各节点相关配置文件，放置在节点目录下，启动容器时需挂载节点的配置文件**。
  
  - 每个节点启动依赖一些配置文件，详细请参考[FISCO BCOS配置说明](https://mp.weixin.qq.com/s/3RGTRvheSr5P1nXbmAjl2g)。
  - 主配置文件config.ini，其中会配置本节点监听的IP和端口。需要根据云环境定制。
