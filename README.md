@@ -4,7 +4,7 @@
  
   项目主要有三个部分：
   1. docker目录存放front镜像使用和打包相关文件。  
-    - [front镜像使用文档.md](docker/front-instll.md)   
+    - [front镜像使用文档.md](docker/front-install.md)   
     - [front镜像打包文档.md](docker/front-build.md)
   
   2. k8s目录主要存放front镜像k8s部署相关yaml文件。
