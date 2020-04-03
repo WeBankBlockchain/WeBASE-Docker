@@ -1,0 +1,99 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fisco
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      run: fisco
+  serviceName: fisco
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        run: fisco
+    spec:
+      containers:
+      - env:
+        - name: envflag
+          value: prod-etv
+        image: repo-dev.koall.io/base/fisco-k8s:v1
+        imagePullPolicy: Always
+        name: fisco
+        ports:
+        - containerPort: 30300
+          name: tcp-p2p
+          protocol: TCP
+        - containerPort: 20200
+          name: tcp-channel
+          protocol: TCP          
+        - containerPort: 8545
+          name: http-rpc
+          protocol: TCP
+      imagePullSecrets:
+      - name: registry-secret
+      volumeMounts:
+      - mountPath: /srv
+        name: fisco-config
+      - mountPath: /srv/applogs
+        name: applogs      
+    volumes:
+      - hostPath:
+          path: /datashare/fiscok8s
+          type: ""
+        name: fisco-config
+      - hostPath:
+          path: /usr/local/jdk/default
+          type: ""
+        name: jdk-path
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fisco
+spec:
+  clusterIP: None
+  ports:
+  - name: tcp-p2p
+    port: 30300
+    protocol: TCP
+    targetPort: 30300
+  - name: tcp-channel
+    port: 20200
+    protocol: TCP
+    targetPort: 20200
+  - name: http-rpc
+    port: 8545
+    protocol: TCP
+    targetPort: 8545
+  selector:
+    run: fisco
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiscosvc
+spec:
+  ports:
+  - name: tcp-p2p
+    port: 30300
+    protocol: TCP
+    targetPort: 30300
+  - name: tcp-channel
+    port: 20200
+    protocol: TCP
+    targetPort: 20200
+  - name: http-rpc
+    port: 8545
+    protocol: TCP
+    targetPort: 8545
+  selector:
+    run: fisco
