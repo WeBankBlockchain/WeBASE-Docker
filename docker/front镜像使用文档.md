@@ -73,7 +73,9 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
  6 修改application.yml 和log配置
  
   如果需要修改applicaiton的配置或日志文件配置
-  需要将frontconf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,log4j2.xml,修改好后。
+  需要将frontconf目录下内容（即application.yml在目录）拷贝到node的frontconf目录（需要自己新建）下，这样可以在本地修改application.yml,log4j2.xml。
+  front的数据存在h2数据库中，如果需要挂载出来，可以在application.yml中修改h2路径,如修改成"jdbc:h2:file:./conf/h2/webasefront"
+  修改好后。
  ```bash
    cp -r frontconf node0/
   ```
@@ -120,6 +122,6 @@ nodes/172.17.0.1/node0/conf/group.1.genesis >> newNodeGm/conf/group.1.genesis
 nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
 
 ```
-2. 跟上述步骤3类似，拷贝sdk证书到 新的节点目录， cp -r sdk/ newNode/ 
+2. 跟上述步骤3类似，拷贝sdk证书到新的节点目录， cp -r sdk/ newNode/ 
 3. 修改新节点config.ini监听的IP和端口为正确的IP和端口
 4. 使用docker启动新节点
