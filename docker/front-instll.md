@@ -125,7 +125,7 @@ nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
 
  2 跟上述步骤3类似，拷贝sdk证书到新的节点目录，
 ```bash
-  cp -r nodes/172.17.0.1/node0/sdk/ newNode/ 
+  cp -r nodes/172.17.0.1/node0/sdk/ newNodeGm/ 
 ```
  3 修改新节点config.ini监听的IP和端口为正确的IP和端口。  
  
