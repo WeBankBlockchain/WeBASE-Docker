@@ -68,7 +68,7 @@ bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
  - docker exec -it {containerId} /bin/bash   进入容器
  - 容器里执行/usr/local/bin/fisco-bcos -v 检查节点版本是否正确。
  - 容器里/data目录存放的是节点相关信息，/dist目录主要存放的是前置的相关信息 
- - front相关文件在容器的/dist目录下，日志在/dist/log下，
+ - 前置日志在/dist/log下，
    执行 tail -f /dist/log/WeBASE-Front.log 可检查日志看是否启动报错。  
  
  7 修改application.yml 和log配置（可跳过）
