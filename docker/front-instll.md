@@ -40,7 +40,7 @@ EOF
 # -S 资源统计
 bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 ```
- 执行后会生成nodes目录，nodes目录包含各节点配置目录。
+ 执行后会生成nodes目录，nodes目录包含各节点配置。
 
  
  4  因为front需要sdk证书才能启动， 拷贝sdk目录内容到各个节点目录。 如下：
@@ -49,14 +49,16 @@ bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 ```
 
  5 启动 
- 至此区块链网络各节点的配置已生成，将nodes下各节点目录(nodes/{ip})拷贝到对应ip机器上。
+ 至此区块链网络各节点的配置已生成，将nodes下各节点目录即nodes/{ip}拷贝到对应ip机器上。
  
- 然后在各自机器上启动容器，指令如下。其中网络模式，脚本使用了host模式，用户可自行选择网络模式，并自行替换自己需要的镜像名。  
- 每个节点机器上均这样进行操作。
+ 然后在各自机器上启动容器，指令如下：
 
 ```bash
-cd {ip}/node0/
-docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+ # 其中网络模式，脚本使用了host模式，用户可自行选择网络模式，
+ # 自行替换需要的镜像名。  
+
+  cd {ip}/node0/
+  docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
 ```
  至此镜像启动成功。
  
