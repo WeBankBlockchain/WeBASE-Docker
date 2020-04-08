@@ -127,9 +127,29 @@ nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
 ```bash
   cp -r nodes/172.17.0.1/node0/sdk/ newNodeGm/ 
 ```
- 3 修改新节点config.ini监听的IP和端口为正确的IP和端口。  
+ 3 修改新节点config.ini监听的IP和端口为正确的IP和端口。
+``` 
+ $ vim newNodeGm/config.ini
+ [rpc]
+     ;rpc listen ip
+     listen_ip=127.0.0.1
+     ;channelserver listen port
+     channel_listen_port=20302
+     ;jsonrpc listen port
+     jsonrpc_listen_port=8647
+ [p2p]
+     ;p2p listen ip
+     listen_ip=0.0.0.0
+     ;p2p listen port
+     listen_port=30402
+     ;nodes to connect
+     node.0=127.0.0.1:30400
+     node.1=127.0.0.1:30401
+     node.2=127.0.0.1:30402  
+```
  
  4 使用docker启动新节点
 ```bash
 docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
 ```
+5 
