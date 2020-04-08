@@ -3,9 +3,8 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: peer1.bcosorg2.bcos-test
-  name: peer1-bcosorg2
-  namespace: bcos-test
+    io.kompose.service: peer0.org4
+  name: peer0-org4
 spec:
   clusterIP: 172.18.255.23
   ports:
@@ -22,4 +21,4 @@ spec:
     port: 5002
     targetPort: 5002
   selector:
-    io.kompose.service: peer1.bcosorg2.bcos-test
+    io.kompose.service: peer0.org4

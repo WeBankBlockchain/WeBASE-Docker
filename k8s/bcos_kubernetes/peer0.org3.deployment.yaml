@@ -3,9 +3,8 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: peer0.bcosorg1.bcos-test
-  name: peer0.bcosorg1.bcos-test
-  namespace: bcos-test
+    io.kompose.service: peer0.org3
+  name: peer0.org3
 spec:
   replicas: 1
   strategy:
@@ -14,10 +13,10 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: peer0.bcosorg1.bcos-test
+        io.kompose.service: peer0.org3
     spec:
       containers:
-      - name: peer0-bcosorg1
+      - name: peer0-org3
         image: fiscoorg/front:v0.8
         ports:
         - containerPort: 8545
@@ -27,26 +26,21 @@ spec:
         resources: {}
         volumeMounts:
         - mountPath: /data
-          name: peer0-bcosorg1-conf
-        - mountPath: /opt
-          name: peer0-bcosorg1-data
+          name: peer0-org3-conf
         - mountPath: /dist/log
-          name: peer0-bcosorg1-frontlog
+          name: peer0-org3-frontlog
         - mountPath: /dist/conf/application.yml
-          name: peer0-bcosorg1-appconf
+          name: peer0-org3-appconf
         workingDir: /data
       restartPolicy: Always
       volumes:
-      - name: peer0-bcosorg1-conf
+      - name: peer0-org3-conf
         hostPath:
-          path: /data/nodes/172.18.255.20/node0
-      - name: peer0-bcosorg1-frontlog
+          path: /data/nodes/172.17.0.3/node0
+      - name: peer0-org3-frontlog
         hostPath:
-          path: /data/nodes/172.18.255.20/frontlog
-      - name: peer0-bcosorg1-appconf
+          path: /data/nodes/172.17.0.3/frontlog
+      - name: peer0-org3-appconf
         hostPath:
           path: /data/nodes/application.yml
-      - name: peer0-bcosorg1-data
-        persistentVolumeClaim:
-          claimName: peer0-bcosorg1-pvc-bcos-test
 status: {}
