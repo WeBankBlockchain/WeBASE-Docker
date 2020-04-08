@@ -14,7 +14,7 @@
  1 下载build_chain脚本
  
   ```bash
-   curl -LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/release-2.3.0-bsn/build_chain.sh && chmod u+x build_chain.sh
+   curl -LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/master/build_chain.sh && chmod u+x build_chain.sh
    ```
  
  2 准备配置文件
@@ -38,7 +38,7 @@ EOF
 # -d 使用docker模式
 # -g 国密
 # -S 资源统计
-bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
+bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 ```
  执行后会生成nodes目录，nodes目录包含各节点配置。
 
@@ -100,7 +100,7 @@ bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 1 下载gen_node_cert.sh
 
 ```
-curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/release-2.3.0-bsn/tools/gen_node_cert.sh && chmod u+x gen_node_cert.sh
+curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/mster/tools/gen_node_cert.sh && chmod u+x gen_node_cert.sh
 ```
 
 2 签发证书
