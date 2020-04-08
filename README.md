@@ -33,7 +33,20 @@
  
 
  ### 2 附录
-  docker安装，推荐使用centos系统。安装请参考官方文档：https://docs.docker.com/install/linux/docker-ce/centos/
+ #### 2.1 安装
  
+| 操作系统         |  版本最低要求     |  安装方式    |
+| ------------- |:-------|:-----|
+| CentOS(RHEL)| CentOS 7.3（kernel >= 3.10.0-514）      |curl -fsSL https://get.docker.com -o get-docker.sh && bash get-docker.sh|
+|Debian|Stretch 9  |curl -fsSL https://get.docker.com -o get-docker.sh && bash get-docker.sh|
+|Ubuntu|Xenial 16.04 (LTS)|curl -fsSL https://get.docker.com -o get-docker.sh && bash get-docker.sh|
+|MacOS| 10.13 |参考: [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)|
+
+关于其他系统的安装方法，请参考: https://docs.docker.com/install/linux/docker-ce/binaries/
+
+因为 Docker 的存储驱动，建议使用 overlay2，所以需要 Linux kernel 4.0 以上的版本。如果是 RHEL 或者 CentOS 的话，需要 Linux kernel  3.10.0-51 以上。关于 overlay2 请参考: [https://docs.docker.com/storage/storagedriver/overlayfs-driver/](https://docs.docker.com/storage/storagedriver/overlayfs-driver/)
+
+CentOS 版本对应的 kernel 版本请参考: [https://en.wikipedia.org/wiki/CentOS#CentOS_version_7](https://en.wikipedia.org/wiki/CentOS#CentOS_version_7)
 
 
+ 
