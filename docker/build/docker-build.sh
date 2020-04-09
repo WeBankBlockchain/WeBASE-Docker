@@ -2,7 +2,7 @@
 
 # wget https://www.fisco.com.cn/cdn/webase/releases/download/v1.2.3/webase-front.zip
 
-  git clone -b $1 https://github.com/WeBankFinTech/WeBASE-Front.git && cd  WeBASE-Front
+  git clone -b $1 https://github.com/WeBankFinTech/WeBASE-Front.git --depth=1 && cd  WeBASE-Front
   sh gradlew build -x test
   cp -r dist ../
   cd .. && rm -rf WeBASE-Front
