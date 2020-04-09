@@ -36,10 +36,10 @@ spec:
       volumes:
       - name: peer0-org1-conf
         hostPath:
-          path: /data/nodes/172.17.0.1/node0
+          path: /data/nodes/fisco-0/node0
       - name: peer0-org1-frontlog
         hostPath:
-          path: /data/nodes/172.17.0.1/frontlog
+          path: /data/nodes/fisco-0/frontlog
       - name: peer0-org1-appconf
         hostPath:
           path: /data/nodes/application.yml
