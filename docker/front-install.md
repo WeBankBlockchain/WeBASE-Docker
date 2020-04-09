@@ -38,7 +38,8 @@ EOF
 # -d 使用docker模式
 # -g 国密
 # -S 资源统计
-bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
+# -Z 生成机构证书
+bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g -Z
 ```
  执行后会生成nodes目录，nodes目录包含各节点配置。
 
@@ -133,3 +134,27 @@ nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
 ```bash
 docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
 ```
+
+
+#### 2.2 为新机构生成证书
+
+1 下载gen_agency_cert.sh
+
+```
+在docker目录下
+```
+
+2 签发机构证书
+  使用指定的根证书（链证书）签发 新机构的证书；
+
+```bash
+# -c 指定链证书及私钥所在路径，目录下必须有ca.crt 和 ca.key
+# -g 指定国密链证书及私钥所在路径，目录下必须有gmca.crt 和 gmca.key
+# -a 新机构的机构名
+
+ 
+bash gen_agency_cert.sh -c nodes/cert/ -a newAgencyName -g nodes/gmcert/
+```
+生成的机构证书在nodes/cert/newAgencyName 以及 nodes/gmcert/newAgencyName下。
+
+
