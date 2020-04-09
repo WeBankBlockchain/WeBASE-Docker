@@ -14,7 +14,7 @@
  1 下载build_chain脚本
  
   ```bash
-   curl -LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/master/build_chain.sh && chmod u+x build_chain.sh
+   curl -LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/v2.3.0/build_chain.sh && chmod u+x build_chain.sh
    ```
  
  2 准备配置文件
@@ -100,7 +100,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 1 下载gen_node_cert.sh
 
 ```
-curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/mster/tools/gen_node_cert.sh && chmod u+x gen_node_cert.sh
+curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/master/tools/gen_node_cert.sh && chmod u+x gen_node_cert.sh
 ```
 
 2 签发证书
@@ -152,4 +152,5 @@ nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
 ```bash
 docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
 ```
-5 
+5 通过调用WeBASE-Front的addSealer接口将新节点加入区块链网络。
+http://172.17.0.1:5002/WeBASE-Front/1/web3/addSealer
