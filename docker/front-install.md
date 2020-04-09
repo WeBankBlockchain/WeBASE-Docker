@@ -71,20 +71,20 @@ bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g
  - 前置日志在/dist/log下，
    执行 tail -f /dist/log/WeBASE-Front.log 可检查日志看是否启动报错。  
  
- 7 修改application.yml 和log配置（可跳过）
+7 修改application.yml （可跳过）
  
-  如果需要修改front应用的applicaiton.yml配置或日志文件配置
-  需要将本项目docker/frontconf目录（即application.yml所在目录）拷贝到每个节点的目录下，
+  如果需要修改front应用的applicaiton.yml配置,
+  需要将front的application.yml文件（即本项目docker/application.yml）拷贝到每个节点的目录下，
   参考命令如下：
    ```bash
-    cp -r ./docker/frontconf nodes/{ip}/node0/
+    cp -r ./docker/application.yml nodes/{ip}/node0/
    ```
-  这样可以在本地修改application.yml,log4j2.xml。
-  front的数据存在h2数据库中，如果需要挂载出来，可以在application.yml中修改h2路径,如修改成"jdbc:h2:file:./conf/h2/webasefront"。  
+  然后在本地修改application.yml。
+  front的数据存在h2数据库中，如果需要挂载出来，可以在application.yml中修改h2路径,如修改成"jdbc:h2:file:/data/h2/webasefront"。  
 
-  启动镜像命令需要加上 **-v $PWD/frontconf:/dist/conf**， 命令如下：
+  启动镜像命令需要加上 **-v $PWD/application.yml:/dist/conf/application.yml**， 命令如下：
   ```bash
-   docker run -d  -v $PWD:/data -v $PWD/frontconf:/dist/conf --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+   docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
   ```
   
   
