@@ -39,6 +39,8 @@ EOF
 # -g 国密
 # -S 资源统计
 # -Z 生成机构证书
+# -k 自签链证书， 要求-k的目录里有ca.key/ca.crt
+# -K 自签国密链证书，-K的目录中有gmca.key/gmca.crt
 bash build_chain.sh -S -f nodeconf -o nodes -d -g -Z
 ```
  执行后会生成nodes目录，nodes目录包含各节点配置。
