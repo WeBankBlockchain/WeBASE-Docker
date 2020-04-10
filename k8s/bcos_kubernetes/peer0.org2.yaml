@@ -3,9 +3,9 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: peer0.bcosorg1.bcos-test
-  name: peer0.bcosorg1.bcos-test
-  namespace: bcos-test
+    io.kompose.service: peer0.org2
+  name: peer0.org2
+  namespace:
 spec:
   replicas: 1
   strategy:
@@ -14,11 +14,11 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: peer0.bcosorg1.bcos-test
+        io.kompose.service: peer0.org2
     spec:
       containers:
-      - name: peer0-bcosorg1
-        image: fiscoorg/front:bsn-gm-1.2.3
+      - name: peer0-org2
+        image: fiscoorg/front:bsn-0.2.0-gm
         ports:
         - containerPort: 8545
         - containerPort: 20200
@@ -27,20 +27,24 @@ spec:
         resources: {}
         volumeMounts:
         - mountPath: /data
-          name: peer0-bcosorg1-conf
+          name: peer0-org2-conf
+        - mountPath: /dist/log
+          name: peer0-org2-frontlog
         - mountPath: /dist/conf/application.yml
-          name: peer0-bcosorg1-appconf
+          name: peer0-org2-appconf
         workingDir: /data
       restartPolicy: Always
       volumes:
-      - name: peer0-bcosorg1-conf
+      - name: peer0-org2-conf
         hostPath:
-          path: /data/nodes/fisco-0/node0
-      - name: peer0-bcosorg1-appconf
+          path: /root/nodes/fisco-1/node0
+      - name: peer0-org2-frontlog
         hostPath:
-          path: /data/nodes/fisco-0/nodes/application.yml
+          path: /root/nodes/fisco-1/frontlog
+      - name: peer0-org2-appconf
+        hostPath:
+          path: /root/nodes/application.yml
 status: {}
-
 
 ---
 apiVersion: v1
@@ -48,11 +52,10 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: peer0.bcosorg1.bcos-test
-  name: peer0-bcosorg1
-  namespace: bcos-test
+    io.kompose.service: peer0.org2
+  name: peer0-org2
 spec:
-  clusterIP: none
+  clusterIP: 172.18.255.22
   ports:
   - name: rpc
     port: 8545
@@ -67,4 +70,4 @@ spec:
     port: 5002
     targetPort: 5002
   selector:
-    io.kompose.service: peer0.bcosorg1.bcos-test
+    io.kompose.service: peer0.org2

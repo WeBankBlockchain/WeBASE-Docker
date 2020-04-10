@@ -85,7 +85,11 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
 ```bash
 # -c指定机构证书及私钥所在路径
 # -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥
+非国密
 bash gen_node_cert.sh -c nodes/cert/test -o newNode
+
+国密
+bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
 ```
 
 ### 3. 为群组1扩容节点
@@ -93,9 +97,16 @@ bash gen_node_cert.sh -c nodes/cert/test -o newNode
 1. 根据步骤5为新节点生成证书，拷贝下述文件到新节点文件夹。
 
 ```bash
+非国密
 nodes/172.17.0.1/node0/config.ini >> newNode/config.ini
 nodes/172.17.0.1/node0/conf/group.1.genesis >> newNode/conf/group.1.genesis
 nodes/172.17.0.1/node0/conf/group.1.ini >> newNode/conf/group.1.ini
+
+国密
+nodes/172.17.0.1/node0/config.ini >> newNodeGm/config.ini
+nodes/172.17.0.1/node0/conf/group.1.genesis >> newNodeGm/conf/group.1.genesis
+nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
+
 ```
 
 2. 修改新节点config.ini监听的IP和端口为正确的IP和端口
@@ -112,7 +123,7 @@ nodes/172.17.0.1/node0/conf/group.1.ini >> newNode/conf/group.1.ini
     node.1=172.17.0.2:30300
     node.2=172.17.0.3:30300
     node.3=172.17.0.4:30300
-    node.3=172.17.0.5:30300
+    node.4=172.17.0.5:30300
 ```
 
 ### 4. 增加群组
