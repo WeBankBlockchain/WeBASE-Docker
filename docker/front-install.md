@@ -9,7 +9,7 @@
 
 ### 1. 镜像使用步骤
 
- 举例，如果要生成一个机构名为test，4个节点分别位于`172.17.0.1-172.17.0.4`这四台机器上，单群组模式的区块链网络，则操作如下。  
+ 举例，如果要生成一个机构名为test，4个节点分别位于`17 2.17.0.1-172.17.0.4`这四台机器上，单群组模式的区块链网络，则操作如下。  
  
  1 下载build_chain脚本（已在docker目录下）
  
@@ -24,10 +24,10 @@
 # test 机构名
 # 1 群组id
 cat  > nodeconf << EOF
-    172.17.0.1:1 test 1
-    172.17.0.2:1 test 1
-    172.17.0.3:1 test 1
-    172.17.0.4:1 test 1
+    172.17.0.1:1 test 1 30300,20200,8545
+    172.17.0.2:1 test 1 30300,20200,8545
+    172.17.0.3:1 test 1 30300,20200,8545
+    172.17.0.4:1 test 1 30300,20200,8545
 EOF
 ```
 
@@ -39,7 +39,7 @@ EOF
 # -g 国密
 # -S 资源统计
 # -Z 生成机构证书
-bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g -Z
+bash build_chain.sh -S -f nodeconf -o nodes -d -g -Z
 ```
  执行后会生成nodes目录，nodes目录包含各节点配置。
 
@@ -68,7 +68,7 @@ bash build_chain.sh -S -f nodeconf -p 30300,20200,8545 -o nodes -d -g -Z
  
  6 修改application.yml （可跳过）
  
-  如果需要修改front应用的applicaiton.yml配置,
+  如果需要修改front应用的applicaiton.yml配置,如果修改了节点的channelport端口，则须相应修改applicaiton.yml中的channelPort的值
   需要将front的application.yml文件（即本项目docker/application.yml）拷贝到每个节点的目录下，
   参考命令如下：
    ```bash
