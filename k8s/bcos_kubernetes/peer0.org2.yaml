@@ -37,10 +37,10 @@ spec:
       volumes:
       - name: peer0-org2-conf
         hostPath:
-          path: /root/nodes/fisco-1/node0
+          path: /root/nodes/172.18.255.21/node0
       - name: peer0-org2-frontlog
         hostPath:
-          path: /root/nodes/fisco-1/frontlog
+          path: /root/nodes/172.18.255.21/frontlog
       - name: peer0-org2-appconf
         hostPath:
           path: /root/nodes/application.yml
@@ -55,7 +55,7 @@ metadata:
     io.kompose.service: peer0.org2
   name: peer0-org2
 spec:
-  clusterIP: 172.18.255.22
+  clusterIP: 172.18.255.21
   ports:
   - name: rpc
     port: 8545
