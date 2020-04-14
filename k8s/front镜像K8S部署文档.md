@@ -8,11 +8,9 @@
 | Kubernetes |       建议1.12之后版本    |
 
 
-
-
 ### 1. 镜像部署使用步骤
 
- 举例，如果要生成一个机构名为test，单群组模式的区块链网络，则操作如下。  
+ 举例，如果要生成有四个机构，机构名分别为org1~org4，并且每个机构一个节点，单群组模式的区块链网络，则操作如下。  
  
  1 下载build_chain脚本
  
@@ -22,7 +20,7 @@
  
  2 准备配置文件
   k8s部署各Service暴露IP方式建议采用ClusterIP,并且service的clusterIP用指定值。
-  如下，我们采用**172.18.255.20～172.18.255.23**
+  如下，clusterIP我们采用**172.18.255.20～172.18.255.23**
 
 ```bash
 # 此IP根据service的IP范围确定
@@ -47,6 +45,9 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 ```
  执行后会生成nodes目录，nodes目录包含各节点配置。
  请将生成的区块链配置nodes目录拷贝到k8s集群的各个主机上。方便节点启动读取配置。
+  ```bash       
+    cp -r nodes/ /root
+ ```
   
  4 k8s部署的yaml文件在bcos_kubernetes目录下，有相应的deployment.yaml和service.yaml，这里合并在一个文件里。
    在k8s 主机上根据yaml启动镜像，参考命令如下：
@@ -60,7 +61,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 
 ####2.1 delpoyment解析：
 
-1 如下 需要将pod内 /data ，/dist/log以及/dist/conf/application.yml挂载出来。挂载主机目录在hostPath属性下，可自行修改。
+1 如下 需要将pod内 /data ，/dist/log以及/dist/conf/application.yml挂载出来。挂载主机目录在hostPath属性下，可自行修改。  
 2 需要将pod的 8545(rpc)，20200(channel)，30300(p2p)，5002（front端口）暴露出来。
 ```
     spec:
@@ -94,7 +95,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
           path: /root/nodes/application.yml
 ```
 ####2.2 service解析
-1 service在集群中采用ClusterIP方式暴露服务，并指定clusterIP值。 
+1 service在集群中采用ClusterIP方式暴露服务，并指定clusterIP值。   
 2 外网访问服务用户可以自行选择方案。
 
 ```
