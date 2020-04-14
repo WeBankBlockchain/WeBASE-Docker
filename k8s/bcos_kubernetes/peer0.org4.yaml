@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: peer0-org4
-        image: fiscoorg/front:bsn-0.2.0-gm
+        image: fiscoorg/front:latest
         ports:
         - containerPort: 8545
         - containerPort: 20200

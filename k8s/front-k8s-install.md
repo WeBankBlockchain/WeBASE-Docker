@@ -67,7 +67,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
     spec:
       containers:
       - name: peer0-org1
-        image: fiscoorg/front:bsn-0.2.0-gm
+        image: fiscoorg/front:latest
         ports:
         - containerPort: 8545
         - containerPort: 20200
