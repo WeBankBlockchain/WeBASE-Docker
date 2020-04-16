@@ -1,18 +1,33 @@
-FROM fiscoorg/fiscobcos:v2.2.0
+# choose bcos image, standard or guomi
+ARG BCOS_IMG_VERSION
+FROM fiscoorg/fiscobcos:${BCOS_IMG_VERSION:-v2.2.0}
 
 LABEL maintainer service@fisco.com.cn
 
-WORKDIR /data
+# bcos config files
+WORKDIR /bcos
+# WeBASE-Front files
+WORKDIR /front
 
+# setup JDK
 ADD jdk-8u211-linux-x64.tar.gz /usr/local/
-
 ENV JAVA_HOME /usr/local/jdk1.8.0_211
 ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 ENV PATH $PATH:$JAVA_HOME/bin
 
-ADD dist /dist
+# COPY start shell of bcos and front
+COPY ["start.sh", "/start.sh"]
 
-ENTRYPOINT ["sh","/dist/start.sh"]
+# COPY front files
+# cache lib layer
+COPY ["dist/lib/", "/front/lib/"]
+COPY ["dist/*.sh", "/front/"]
+COPY ["dist/apps/", "/front/apps/"]
+COPY ["dist/conf/", "/front/conf/"]
+COPY ["dist/static/", "/front/static"]
 
-
+# expose port
 EXPOSE 30300 20200 8545 5002
+
+# start
+ENTRYPOINT ["sh","/start.sh"]
