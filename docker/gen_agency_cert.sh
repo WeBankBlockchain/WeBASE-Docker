@@ -1,12 +1,13 @@
 #!/bin/bash
 set -e
 
-current_dir=$(pwd)
 guomi_mode=
 logfile=${PWD}/build.log
 ca_path=
 gmca_path=
 agency=
+root_crt=
+gmroot_crt=
 TASSL_CMD="${HOME}"/.fisco/tassl
 
 LOG_WARN()
@@ -65,7 +66,6 @@ dir_must_not_exists() {
 
 help()
 {
-    echo "${1}"
     cat << EOF
 Usage:
     -c <ca path>           [Required]
@@ -74,7 +74,7 @@ Usage:
     -h Help
 e.g: 
     bash $0 -c nodes/cert -a newAgency
-    bash $0 -c nodes/cert -a newAgency -g nodes/gmcert
+    bash $0 -c nodes/cert -g nodes/gmcert -a newAgency
 EOF
 exit 0
 }
@@ -86,6 +86,7 @@ parse_params()
         c) ca_path="${OPTARG}"
             if [ ! -e "$ca_path/ca.key" ]; then LOG_WARN "$ca_path/ca.key not exist" && exit 1; fi
             if [ ! -e "$ca_path/ca.crt" ]; then LOG_WARN "$ca_path/ca.crt not exist" && exit 1; fi
+            [ -f "$ca_path/root.crt" ] && root_crt="$ca_path/root.crt"
         ;;
         a) agency="${OPTARG}"
             if [ -z "$agency" ]; then LOG_WARN "$agency not specified" && exit 1; fi
@@ -93,10 +94,48 @@ parse_params()
         g) guomi_mode="yes" && gmca_path=$OPTARG
             if [ ! -e "$gmca_path/gmca.key" ]; then LOG_WARN "$gmca_path/gmca.key not exist" && exit 1; fi
             if [ ! -e "$gmca_path/gmca.crt" ]; then LOG_WARN "$gmca_path/gmca.crt not exist" && exit 1; fi        
+            [ -f "$gmca_path/gmroot.crt" ] && gmroot_crt="${gmca_path}/gmroot.crt"
         ;;
         h) help;;
+        *) LOG_WARN "invalid option $option";;
         esac
     done
+}
+
+generate_cert_conf()
+{
+    local output=$1
+    cat << EOF > "${output}"
+[ca]
+default_ca=default_ca
+[default_ca]
+default_days = 365
+default_md = sha256
+
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+[req_distinguished_name]
+countryName = CN
+countryName_default = CN
+stateOrProvinceName = State or Province Name (full name)
+stateOrProvinceName_default =GuangDong
+localityName = Locality Name (eg, city)
+localityName_default = ShenZhen
+organizationalUnitName = Organizational Unit Name (eg, section)
+organizationalUnitName_default = fisco-bcos
+commonName =  Organizational  commonName (eg, fisco-bcos)
+commonName_default = fisco-bcos
+commonName_max = 64
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+[ v4_req ]
+basicConstraints = CA:TRUE
+
+EOF
 }
 
 gen_agency_cert() {
@@ -107,17 +146,23 @@ gen_agency_cert() {
     dir_must_exists "$chain"
     file_must_exists "$chain/ca.key"
     check_name agency "$name"
-    agencydir=$agencypath
+    agencydir="$agencypath"
     dir_must_not_exists "$agencydir"
-    mkdir -p $agencydir
+    mkdir -p "$agencydir"
 
-    openssl genrsa -out $agencydir/agency.key 2048 2> /dev/null
+    openssl genrsa -out "$agencydir/agency.key" 2048 2> /dev/null
     openssl req -new -sha256 -subj "/CN=$name/O=fisco-bcos/OU=agency" -key "$agencydir/agency.key" -config "$chain/cert.cnf" -out "$agencydir/agency.csr" 2> /dev/null
     openssl x509 -req -days 3650 -sha256 -CA "$chain/ca.crt" -CAkey "$chain/ca.key" -CAcreateserial\
         -in "$agencydir/agency.csr" -out "$agencydir/agency.crt"  -extensions v4_req -extfile "$chain/cert.cnf" 2> /dev/null
     
-    cp $chain/ca.crt $chain/cert.cnf $agencydir/
-    rm -f $agencydir/agency.csr
+    cp "$chain/ca.crt" "$chain/cert.cnf" "$agencydir/"
+    if [[ -n "${root_crt}" ]];then
+        echo "Use user specified root cert as ca.crt, $agencydir" >>"${logfile}"
+        cp "${root_crt}" "$agencydir/ca.crt"
+    else
+        cp "$chain/ca.crt" "$chain/cert.cnf" "$agencydir/"
+    fi
+    rm -f "$agencydir/agency.csr"
 
     echo "build $name cert successful!"
 }
@@ -140,8 +185,8 @@ check_and_install_tassl(){
 
 generate_cert_conf_gm()
 {
-    local output=$1
-    cat << EOF > ${output} 
+    local output="$1"
+    cat << EOF > "${output}" 
 HOME			= .
 RANDFILE		= $ENV::HOME/.rnd
 oid_section		= new_oids
@@ -174,7 +219,7 @@ crl		= $dir/crl.pem 		# The current CRL
 private_key	= $dir/private/cakey.pem # The private key
 RANDFILE	= $dir/private/.rand	# private random number file
 
-x509_extensions	= usr_cert		# The extentions to add to the cert
+x509_extensions	= usr_cert		# The extensions to add to the cert
 
 name_opt 	= ca_default		# Subject Name options
 cert_opt 	= ca_default		# Certificate field options
@@ -209,7 +254,7 @@ default_bits		= 2048
 default_md		= sm3
 default_keyfile 	= privkey.pem
 distinguished_name	= req_distinguished_name
-x509_extensions	= v3_ca	# The extentions to add to the self signed cert
+x509_extensions	= v3_ca	# The extensions to add to the self signed cert
 
 string_mask = utf8only
 
@@ -265,8 +310,8 @@ EOF
 
 generate_gmsm2_param()
 {
-    local output=$1
-    cat << EOF > ${output} 
+    local output="$1"
+    cat << EOF > "${output}"
 -----BEGIN EC PARAMETERS-----
 BggqgRzPVQGCLQ==
 -----END EC PARAMETERS-----
@@ -282,23 +327,29 @@ gen_agency_cert_gm() {
     dir_must_exists "$chain"
     file_must_exists "$chain/gmca.key"
     check_name agency "$name"
-    agencydir=$agencypath
+    agencydir="${agencypath}-gm"
     dir_must_not_exists "$agencydir"
-    mkdir -p $agencydir
+    mkdir -p "$agencydir"
 
     $TASSL_CMD genpkey -paramfile "$chain/gmsm2.param" -out "$agencydir/gmagency.key" 2> /dev/null
     $TASSL_CMD req -new -subj "/CN=$name/O=fisco-bcos/OU=agency" -key "$agencydir/gmagency.key" -config "$chain/gmcert.cnf" -out "$agencydir/gmagency.csr" 2> /dev/null
     $TASSL_CMD x509 -req -CA "$chain/gmca.crt" -CAkey "$chain/gmca.key" -days 3650 -CAcreateserial -in "$agencydir/gmagency.csr" -out "$agencydir/gmagency.crt" -extfile "$chain/gmcert.cnf" -extensions v3_agency_root 2> /dev/null
 
-    cp $chain/gmca.crt $chain/gmcert.cnf $chain/gmsm2.param $agencydir/
-    rm -f $agencydir/gmagency.csr
+    if [[ -n "${gmroot_crt}" ]];then
+        echo "Use user specified gmroot cert as gmca.crt, $agencydir" >>"${logfile}"
+        cp "${gmroot_crt}" "$agencydir/gmca.crt"
+    else
+        cp "$chain/gmca.crt" "$chain/gmcert.cnf" "$chain/gmsm2.param" "$agencydir/"
+    fi
+    rm -f "$agencydir/gmagency.csr"
 }
 
 main()
 {
-    if [ ! -z "$(openssl version | grep reSSL)" ];then
+    if openssl version | grep -q reSSL ;then
         export PATH="/usr/local/opt/openssl/bin:$PATH"
     fi
+    generate_cert_conf "${ca_path}/cert.cnf"
     gen_agency_cert "${ca_path}" "${ca_path}/${agency}" > "${logfile}" 2>&1
     if [ -n "${guomi_mode}" ]; then
         check_and_install_tassl
@@ -313,8 +364,7 @@ print_result()
 {
     echo "=============================================================="
     LOG_INFO "Cert Path   : ${ca_path}/${agency}"
-    [ ! -z "${guomi_mode}" ] && LOG_INFO "GM Cert Path: ${gmca_path}/${agency}"
-    # LOG_INFO "Output Dir  : $current_dir"
+    [ -n "${guomi_mode}" ] && LOG_INFO "GM Cert Path: ${gmca_path}/${agency}-gm"
     LOG_INFO "All completed."
 }
 

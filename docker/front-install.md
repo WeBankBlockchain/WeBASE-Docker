@@ -31,7 +31,7 @@ cat  > nodeconf << EOF
 EOF
 ```
 
- 3 生成节点配置文件
+ 3 生成节点配置文件，自签证书请参考cert目录结构
 
 ```bash
 # -p 指定节点所使用端口的起始值，同一机器上多节点端口递增。
@@ -39,9 +39,11 @@ EOF
 # -g 国密
 # -S 资源统计
 # -Z 生成机构证书
-# -k 自签链证书， 要求-k的目录里有ca.key/ca.crt
-# -K 自签国密链证书，-K的目录中有gmca.key/gmca.crt
-bash build_chain.sh -S -f nodeconf -o nodes -d -g -Z
+# -k 自签链证书， 要求-k的目录里有ca.key/ca.crt ，如果ca.crt是二级CA，则还需要root.crt(根证书) 
+# -K 自签国密链证书，-K的目录中有gmca.key/gmca.crt，如果gmca.crt是二级CA，则还需要gmroot.crt(根证书)
+
+
+bash build_chain.sh -S -f nodeconf -o nodes -d -g -Z 
 ```
  执行后会生成nodes目录，nodes目录包含各节点配置。
 
@@ -106,6 +108,7 @@ curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/release-2.3.0-b
 # -c指定机构证书及私钥所在路径
 # -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥
 # -g 国密
+
  
 bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
 ```
@@ -144,9 +147,10 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
   使用指定的根证书（链证书）签发 新机构的证书；
 
 ```bash
-# -c 指定链证书及私钥所在路径，目录下必须有ca.crt 和 ca.key
-# -g 指定国密链证书及私钥所在路径，目录下必须有gmca.crt 和 gmca.key
+# -c 指定链证书及私钥所在路径，目录下必须有ca.crt 和 ca.key， 如果ca.crt是二级CA，则还需要root.crt(根证书) 
+# -g 指定国密链证书及私钥所在路径，目录下必须有gmca.crt 和 gmca.key，如果gmca.crt是二级CA，则还需要gmroot.crt(根证书) 
 # -a 新机构的机构名
+
 
  
 bash gen_agency_cert.sh -c nodes/cert/ -a newAgencyName -g nodes/gmcert/
