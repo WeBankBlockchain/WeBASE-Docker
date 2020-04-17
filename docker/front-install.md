@@ -114,7 +114,7 @@ curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/master/tools/ge
 bash gen_node_cert.sh -c nodes/cert/test -o newNode
 
 国密
-bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
+bash gen_node_cert.sh -c nodes/cert/test -o newNodeGm -g nodes/gmcert/test/
 ```
 
 #### 2.2 为群组1扩容节点
