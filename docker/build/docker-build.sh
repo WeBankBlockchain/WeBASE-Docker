@@ -102,6 +102,18 @@ if [[ "${new_tag}"x == "x" ]] ; then
   usage
   exit 1
 fi
+use_guomi=""
+if [[ "${guomi_model}"x == "yesx" ]] ; then
+  # 如果是国密，检查 BCOS 的docker 镜像是否是 -结尾 gm
+  if [[ ${bcos_image_tag} != *-gm ]] ; then
+    LOG_WARN "BCOS docker image:[${bcos_image_tag}] should end with [-gm] when use guomi model."
+    exit 1;
+  fi
+
+  ## set front gradle build param
+  use_guomi=" -Pguomi "
+fi
+
 
 # 拉取 WeBASE-Front
 WEBASE_FRONT_GIT="https://github.com/${git_account}/${PROJECT_NAME}.git";
@@ -109,7 +121,6 @@ LOG_INFO "git pull WeBASE-Front's branch: [${front_branch}] from ${WEBASE_FRONT_
 git clone -b "${front_branch}" ${WEBASE_FRONT_GIT} --depth=1
 
 # 使用国密编译
-use_guomi=$([[ "${guomi_model}"x == "yesx" ]] && echo " -Pguomi " || echo "")
 
 if [[ $(command -v gradle) ]]; then
   # install ufw
