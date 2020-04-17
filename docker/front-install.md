@@ -38,7 +38,7 @@ EOF
 # -d 使用docker模式
 # -g 国密
 # -S 资源统计
-# -Z 生成机构证书
+# -Z 各节点下存放一份SDK证书
 # -k 自签链证书， 要求-k的目录里有ca.key/ca.crt ，如果ca.crt是二级CA，则还需要root.crt(根证书) 
 # -K 自签国密链证书，-K的目录中有gmca.key/gmca.crt，如果gmca.crt是二级CA，则还需要gmroot.crt(根证书)
 
