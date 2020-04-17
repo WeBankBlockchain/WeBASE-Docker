@@ -38,7 +38,7 @@ EOF
 # -d 使用docker模式
 # -g 国密
 # -S 资源统计
-# -Z 生成机构证书
+# -Z 各节点下存放一份SDK证书
 # -k 自签链证书， 要求-k的目录里有ca.key/ca.crt ，如果ca.crt是二级CA，则还需要root.crt(根证书) 
 # -K 自签国密链证书，-K的目录中有gmca.key/gmca.crt，如果gmca.crt是二级CA，则还需要gmroot.crt(根证书)
 
@@ -106,11 +106,11 @@ curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/release-2.3.0-b
 
 ```bash
 # -c指定机构证书及私钥所在路径
-# -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥
+# -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥,newNode/gmconf中会存在机构test新签发国密的证书和私钥
 # -g 国密
 
  
-bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
+bash gen_node_cert.sh -c nodes/cert/test -o newNodeGm -g nodes/gmcert/test/
 ```
 
 #### 2.2 为群组1扩容节点
