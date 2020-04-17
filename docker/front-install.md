@@ -106,11 +106,11 @@ curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/release-2.3.0-b
 
 ```bash
 # -c指定机构证书及私钥所在路径
-# -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥
+# -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥,newNode/gmconf中会存在机构test新签发国密的证书和私钥
 # -g 国密
 
  
-bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
+bash gen_node_cert.sh -c nodes/cert/test -o newNodeGm -g nodes/gmcert/test/
 ```
 
 #### 2.2 为群组1扩容节点
