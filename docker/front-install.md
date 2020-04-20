@@ -14,7 +14,7 @@
  1 下载build_chain脚本（已在docker目录下）
  
   ```bash
-   curl -LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/release-2.3.0-bsn/build_chain.sh && chmod u+x build_chain.sh
+   curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/release-2.3.0-bsn/tools/build_chain.sh && chmod u+x build_chain.sh
    ```
  
  2 准备配置文件
@@ -139,8 +139,8 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
 
 1 下载gen_agency_cert.sh（已在docker目录下）
 
-```
-在docker目录下
+```bash
+    curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/release-2.3.0-bsn/tools/gen_agency_cert.sh
 ```
 
 2 签发机构证书
