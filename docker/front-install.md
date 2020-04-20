@@ -98,7 +98,7 @@ bash build_chain.sh -S -f nodeconf -o nodes -d -g -Z
 
 1 下载gen_node_cert.sh（已在docker目录下）
 
-```
+```bash
 curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/release-2.3.0-bsn/tools/gen_node_cert.sh && chmod u+x gen_node_cert.sh
 ```
 
