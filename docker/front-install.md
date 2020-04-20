@@ -135,7 +135,7 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
 ```
  
 
-#### 2.2 为新机构生成证书
+#### 2.3 为新机构生成证书
 
 1 下载gen_agency_cert.sh（已在docker目录下）
 
