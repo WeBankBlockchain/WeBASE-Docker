@@ -155,6 +155,6 @@ docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-
  
 bash gen_agency_cert.sh -c nodes/cert/ -a newAgencyName -g nodes/gmcert/
 ```
-生成的机构证书在nodes/cert/newAgencyName 以及 nodes/gmcert/newAgencyName下。
+生成的机构证书在nodes/cert/newAgencyName 以及 nodes/gmcert/newAgencyName-gm下。
 
 
