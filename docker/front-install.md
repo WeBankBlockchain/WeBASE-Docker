@@ -85,9 +85,12 @@ bash build_chain.sh -S -f nodeconf -o nodes -d -g -Z
   ```bash
    docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
   ```
-  
-  
-  
+  如果需要讲日志挂载出来,加上 **-v $PWD/frontlog:/dist/log** : 参考命令如下：
+   ```bash
+     docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml -v $PWD/frontlog:/dist/log --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+   ```
+
+
 ### 2. 使用镜像进行扩容
 
 #### 2.1 签发合法证书给SDK使用
