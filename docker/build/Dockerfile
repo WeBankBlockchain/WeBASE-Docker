@@ -1,7 +1,6 @@
 # choose bcos image, standard or guomi
 ARG BCOS_IMG_VERSION
-FROM fiscoorg/fiscobcos:${BCOS_IMG_VERSION:-v2.2.0}
-
+FROM fiscoorg/fiscobcos:${BCOS_IMG_VERSION:-v2.4.0}
 LABEL maintainer service@fisco.com.cn
 
 # bcos config files
@@ -20,14 +19,13 @@ COPY ["start.sh", "/start.sh"]
 
 # COPY front files
 # cache lib layer
-COPY ["dist/lib/", "/front/lib/"]
 COPY ["dist/*.sh", "/front/"]
-COPY ["dist/apps/", "/front/apps/"]
+COPY ["dist/lib/", "/front/lib/"]
 COPY ["dist/conf/", "/front/conf/"]
-COPY ["dist/static/", "/front/static"]
+COPY ["dist/apps/", "/front/apps/"]
 
 # expose port
 EXPOSE 30300 20200 8545 5002
 
 # start
-ENTRYPOINT ["sh","/start.sh"]
+ENTRYPOINT ["bash","/start.sh"]
