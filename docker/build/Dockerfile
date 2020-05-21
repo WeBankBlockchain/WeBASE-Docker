@@ -15,17 +15,17 @@ ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 ENV PATH $PATH:$JAVA_HOME/bin
 
 # COPY start shell of bcos and front
-COPY ["start.sh", "/start.sh"]
+COPY ["docker-start.sh", "/docker-start.sh"]
 
 # COPY front files
 # cache lib layer
 COPY ["dist/*.sh", "/front/"]
 COPY ["dist/lib/", "/front/lib/"]
-COPY ["dist/apps/", "/front/apps/"]
 COPY ["dist/conf/", "/front/conf/"]
+COPY ["dist/apps/", "/front/apps/"]
 
 # expose port
 EXPOSE 30300 20200 8545 5002
 
 # start
-ENTRYPOINT ["bash","/start.sh"]
+ENTRYPOINT ["bash","/docker-start.sh"]

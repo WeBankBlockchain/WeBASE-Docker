@@ -47,7 +47,7 @@ git_account="WeBankFinTech"
 # WeBASE-Front 的分支
 front_branch=master
 # bcos 的 Docker 镜像版本
-bcos_image_tag="v2.2.0"
+bcos_image_tag="v2.4.0"
 # FISCO-BCOS 和 WeBASE-Front 镜像的 Docker Hub repository
 docker_repository="fiscoorg/front"
 
