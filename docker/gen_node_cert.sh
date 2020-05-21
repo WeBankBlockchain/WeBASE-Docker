@@ -26,7 +26,6 @@ LOG_INFO()
 }
 
 help() {
-    echo $1
     cat << EOF
 Usage:
     -c <cert path>              [Required] cert key path 
@@ -65,7 +64,9 @@ while getopts "c:o:g:h" option;do
     ;;
     o) [ ! -z $OPTARG ] && output_dir=$OPTARG
     ;;
-    g) guomi_mode="yes" && gmkey_path=$OPTARG;;
+    g) guomi_mode="yes" && gmkey_path=$OPTARG
+        check_and_install_tassl
+    ;;
     h) help;;
     esac
 done
@@ -318,9 +319,9 @@ main()
 
         #move origin conf to gm conf
         rm ${output_dir}/${conf_path}/node.nodeid
-        cp ${output_dir}/${conf_path} ${output_dir}/${gm_conf_path}/origin_cert -r
+        cp -r ${output_dir}/${conf_path} ${output_dir}/${gm_conf_path}/origin_cert
         #remove original cert files
-        rm ${output_dir:?}/${conf_path} -rf
+        rm -rf ${output_dir:?}/${conf_path}
         mv ${output_dir}/${gm_conf_path} ${output_dir}/${conf_path}
     fi
     if [ -f "${logfile}" ];then rm "${logfile}";fi
