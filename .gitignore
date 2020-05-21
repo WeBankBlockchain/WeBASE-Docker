@@ -3,5 +3,6 @@
 *.iml
 dist
 .DS_Store
+*.tar.gz
 
 

@@ -8,6 +8,6 @@ cp -r /data/sdk/* /front/conf/
 cd /front && bash start.sh
 
 # keep container running
-tail -f /start.sh
+tail -f /docker-start.sh
 
 
