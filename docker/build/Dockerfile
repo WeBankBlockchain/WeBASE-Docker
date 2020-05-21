@@ -21,8 +21,8 @@ COPY ["start.sh", "/start.sh"]
 # cache lib layer
 COPY ["dist/*.sh", "/front/"]
 COPY ["dist/lib/", "/front/lib/"]
-COPY ["dist/conf/", "/front/conf/"]
 COPY ["dist/apps/", "/front/apps/"]
+COPY ["dist/conf/", "/front/conf/"]
 
 # expose port
 EXPOSE 30300 20200 8545 5002

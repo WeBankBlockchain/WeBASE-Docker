@@ -46,8 +46,6 @@ new_tag=""
 git_account="WeBankFinTech"
 # WeBASE-Front 的分支
 front_branch=master
-# 是否使用国密
-guomi_model=no
 # bcos 的 Docker 镜像版本
 bcos_image_tag="v2.2.0"
 # FISCO-BCOS 和 WeBASE-Front 镜像的 Docker Hub repository
@@ -59,19 +57,18 @@ __cmd="$(basename $0)"
 usage() {
     cat << USAGE  >&2
 Usage:
-    ${__cmd}    [-t new_tag] [-c bcos_version] [-a git_account] [-b front_branch] [-p docker_repository] [-g] [-h]
+    ${__cmd}    [-t new_tag] [-c bcos_version] [-a git_account] [-b front_branch] [-p docker_repository] [-h]
     -t          Docker image new_tag, required.
     
     -c          BCOS docker image tag, default v2.4.0, equal to fiscoorg/fiscobcos:v2.4.0.
     -a          Git account, default WeBankFinTech.
     -b          Branch of WeBASE-Front, default master.
     -p          Which repository new image will be pushed to, default fiscoorg/front.
-    -g          Use guomi, default no.
     -h          Show help info.
 USAGE
     exit 1
 }
-while getopts t:c:a:b:p:gh OPT;do
+while getopts t:c:a:b:p:h OPT;do
     case $OPT in
         t)
             new_tag=${OPTARG}
@@ -81,9 +78,6 @@ while getopts t:c:a:b:p:gh OPT;do
             ;;
         a)
             git_account=${OPTARG}
-            ;;
-        g)
-            guomi_model=yes
             ;;
         b)
             front_branch=${OPTARG}
@@ -109,12 +103,14 @@ if [[ "${new_tag}"x == "x" ]] ; then
   exit 1
 fi
 
-if [[ "${guomi_model}"x == "yesx" ]] ; then
-  # 如果是国密，检查 BCOS 的docker 镜像是否是 -结尾 gm
-  if [[ ${bcos_image_tag} != *-gm ]] ; then
-    LOG_WARN "BCOS docker image:[${bcos_image_tag}] should end with [-gm] when use guomi model."
-    exit 1;
+# FISCO-BCSO 的 docker 镜像是 -gm 结尾, 使用国密
+encrypt_type="0"
+if [[ ${bcos_image_tag} == *-gm ]] ; then
+  encrypt_type="1"
+  if [[ ${new_tag} != *-gm ]] ; then
+    new_tag="${new_tag}-gm"
   fi
+  LOG_INFO "BCOS docker image:[${bcos_image_tag}] ends with [-gm], use guomi model, new image tag:[${new_tag}]"
 fi
 
 # 拉取 WeBASE-Front
@@ -128,15 +124,12 @@ rm -rfv ./dist &&  mv -fv ${PROJECT_NAME}/dist . && rm -rf ${PROJECT_NAME}
 mv -fv dist/conf_template dist/conf
 
 # 修改application.yml 配置
-if [[ "${guomi_model}"x == "yesx" ]] ; then
-  sed -i "s/encryptType.*#/encryptType: 1 #/g" dist/conf/application.yml
-else
-  sed -i "s/encryptType.*#/encryptType: 0 #/g" dist/conf/application.yml
-fi
+sed -i "s/encryptType.*#/encryptType: ${encrypt_type} #/g" dist/conf/application.yml
 
-LOG_INFO "Docker image new_tag is [${new_tag}]"
-docker build --build-arg BCOS_IMG_VERSION="${bcos_image_tag}" -t front:"${new_tag}" .
-docker tag  front:"${new_tag}" fiscoorg/front:"${new_tag}"
+new_image="${docker_repository}":"${new_tag}"
+LOG_INFO "Build docker image [${new_image}], base FISCO-BCOS image tag is [${bcos_image_tag}]..."
+docker build --build-arg BCOS_IMG_VERSION="${bcos_image_tag}" -t "${new_image}" .
+docker tag "${new_image}" fiscoorg/front:"${new_tag}"
 
 rm -rf dist
-docker push "${docker_repository}":"${new_tag}"
+#docker push "${docker_repository}":"${new_tag}"
