@@ -40,16 +40,19 @@ trap 'echo -e "Aborted, error $? in command: $BASH_COMMAND"; trap ERR;  exit 1' 
 
 
 ###########################################
-# 新镜像的版本
+# 编译后镜像 FISCO-BCOS & WeBASE-Front 的版本，推送的 Docker registry 仓库
 new_tag=""
-# 拉取哪个版本的 WeBASE-Front（开发调试使用）
+latest_tag="latest"
+docker_repository="fiscoorg/front"
+docker_push="no"
+
+# 指定 WeBASE-Front 账号（开发调试使用）
 git_account="WeBankFinTech"
 # WeBASE-Front 的分支
 front_branch=master
-# bcos 的 Docker 镜像版本
+
+# 父镜像 FISCO-BCOS 的版本
 bcos_image_tag="v2.4.0"
-# FISCO-BCOS 和 WeBASE-Front 镜像的 Docker Hub repository
-docker_repository="fiscoorg/front"
 
 # 解析参数
 __cmd="$(basename $0)"
@@ -57,18 +60,19 @@ __cmd="$(basename $0)"
 usage() {
     cat << USAGE  >&2
 Usage:
-    ${__cmd}    [-t new_tag] [-c bcos_version] [-a git_account] [-b front_branch] [-p docker_repository] [-h]
+    ${__cmd}    [-t new_tag] [-c bcos_version] [-a git_account] [-b front_branch] [-r docker_repository] [-p] [-h]
     -t          Docker image new_tag, required.
-    
+
     -c          BCOS docker image tag, default v2.4.0, equal to fiscoorg/fiscobcos:v2.4.0.
     -a          Git account, default WeBankFinTech.
     -b          Branch of WeBASE-Front, default master.
-    -p          Which repository new image will be pushed to, default fiscoorg/front.
+    -r          Which repository new image will be pushed to, default fiscoorg/front.
+    -p          Execute docker push, default no.
     -h          Show help info.
 USAGE
     exit 1
 }
-while getopts t:c:a:b:p:h OPT;do
+while getopts t:c:a:b:r:ph OPT;do
     case $OPT in
         t)
             new_tag=${OPTARG}
@@ -82,8 +86,11 @@ while getopts t:c:a:b:p:h OPT;do
         b)
             front_branch=${OPTARG}
             ;;
-        p)
+        r)
             docker_repository=${OPTARG}
+            ;;
+        p)
+            docker_push=yes
             ;;
         h)
             usage
@@ -106,11 +113,15 @@ fi
 # FISCO-BCSO 的 docker 镜像是 -gm 结尾, 使用国密
 encrypt_type="0"
 if [[ ${bcos_image_tag} == *-gm ]] ; then
+  # update application.yml of WeBASE-Front
   encrypt_type="1"
+
   if [[ ${new_tag} != *-gm ]] ; then
     new_tag="${new_tag}-gm"
+    latest_tag="${latest_tag}-gm"
   fi
-  LOG_INFO "BCOS docker image:[${bcos_image_tag}] ends with [-gm], use guomi model, new image tag:[${new_tag}]"
+
+  LOG_INFO "FISCO-BCOS docker image:[${bcos_image_tag}] ends with [-gm], use guomi model, new image tag:[${new_tag} and ${latest_tag}]"
 fi
 
 # 拉取 WeBASE-Front
@@ -127,9 +138,12 @@ mv -fv dist/conf_template dist/conf
 sed -i "s/encryptType.*#/encryptType: ${encrypt_type} #/g" dist/conf/application.yml
 
 new_image="${docker_repository}":"${new_tag}"
-LOG_INFO "Build docker image [${new_image}], base FISCO-BCOS image tag is [${bcos_image_tag}]..."
-docker build --build-arg BCOS_IMG_VERSION="${bcos_image_tag}" -t "${new_image}" .
-docker tag "${new_image}" fiscoorg/front:"${new_tag}"
+docker build -f Dockerfile --build-arg BCOS_IMG_VERSION="${bcos_image_tag}" -t "${new_image}" .
+docker tag "${new_image}" ${docker_repository}:"${latest_tag}"
 
 rm -rf dist
-#docker push "${docker_repository}":"${new_tag}"
+
+if [[ "${docker_push}"x == "yesx" ]] ; then
+    docker push "${docker_repository}":"${new_tag}"
+    docker push "${docker_repository}":"${latest_tag}"
+fi

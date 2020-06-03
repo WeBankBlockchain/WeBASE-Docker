@@ -9,16 +9,20 @@ WORKDIR /bcos
 WORKDIR /front
 
 # setup JDK
-ADD jdk-8u211-linux-x64.tar.gz /usr/local/
-ENV JAVA_HOME /usr/local/jdk1.8.0_211
+RUN apt-get update \
+    && apt-get -y install openjdk-8-jdk \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-ENV PATH $PATH:$JAVA_HOME/bin
+ENV PATH $JAVA_HOME/bin:$PATH
 
 # COPY start shell of bcos and front
 COPY ["docker-start.sh", "/docker-start.sh"]
 
 # COPY front files
 # cache lib layer
+# replace start.sh of front(use active profile)
 COPY ["dist/*.sh", "/front/"]
 COPY ["dist/lib/", "/front/lib/"]
 COPY ["dist/conf/", "/front/conf/"]
