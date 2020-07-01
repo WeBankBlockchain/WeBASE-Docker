@@ -72,14 +72,11 @@ docker run -d -v $PWD:/data -v $PWD/sdk:/data/cert -v $PWD/application.yml:/dist
  - 前置日志在/dist/log下，执行 tail -f /dist/log/WeBASE-Front.log 查看日志
 
    如果需要将WeBASE-Front日志挂载出来，docker启动加上 **-v $PWD/frontlog:/dist/log**， 参考命令如下：
-
-   ```bash
+```bash
 docker run -d -v $PWD:/data -v $PWD/sdk:/data/cert -v $PWD/application.yml:/dist/conf/application.yml -v $PWD/frontlog:/dist/log --network=host -w=/data fiscoorg/front:v1.0.0
-   ```
-
+```   
 
 ## 2 使用镜像进行扩容
-
 ### 2.1 签发合法证书给SDK使用
 **build_chain建链时使用自签ca，所有ca.key以及机构私钥位于nodes/cert目录**，请妥善保管**nodes/cert目录**中的文件。
 
