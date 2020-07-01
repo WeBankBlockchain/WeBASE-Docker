@@ -12,7 +12,7 @@
   cp -r ./dist/conf_template ./dist/conf
 
  echo "此次镜像tag: $2"
- docker build -t  front:$2 .
- docker tag  front:$2 fiscoorg/front:$2
+ docker build -t fiscoorg/front:$2 .
+ docker tag fiscoorg/front:$2
  rm -rf dist
 # docker push fiscoorg/front:$1

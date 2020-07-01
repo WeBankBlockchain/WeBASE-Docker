@@ -37,6 +37,10 @@ spring:
     publisher-confirm: true
     ssl:
       enabled: false
+  http:
+    multipart:
+      max-request-size: 30MB # request max size
+      max-file-size: 20MB # single file size
 
 
 server:
@@ -56,13 +60,13 @@ sdk:
   keepAlive: 60
   ip: 127.0.0.1
   channelPort: 20200
-  encryptType: 0 # 0:standard, 1:guomi
+  encryptType: 0  # 0:ecdsa, 1:guomi
 
 logging:
   config: classpath:log4j2.xml
 
 constant:
-  keyServer: 127.0.0.1:5004 # webase-sign的IP端口，英文逗号相隔（不带空格）
+  keyServer: 127.0.0.1:5004 # webase-sign服务的IP:Port（单个）
   transMaxWait: 30
   monitorDisk: /
   monitorEnabled: true
