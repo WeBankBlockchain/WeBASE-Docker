@@ -6,7 +6,7 @@
 
 /usr/local/bin/fisco-bcos -c /data/config.ini >>nohup.out&
 
-cp -r /data/sdk/* /dist/conf/
+cp -r /data/cert/* /dist/conf/
 
 cd /dist
 
