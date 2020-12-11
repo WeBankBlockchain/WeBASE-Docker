@@ -1,6 +1,6 @@
 # choose bcos image, standard or guomi
 ARG BCOS_IMG_VERSION
-FROM fiscoorg/fiscobcos:${BCOS_IMG_VERSION:-v2.4.0}
+FROM fiscoorg/fiscobcos:${BCOS_IMG_VERSION:-v2.7.0}
 LABEL maintainer service@fisco.com.cn
 
 # bcos config files
