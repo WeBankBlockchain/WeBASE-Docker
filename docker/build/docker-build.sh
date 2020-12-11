@@ -43,16 +43,16 @@ trap 'echo -e "Aborted, error $? in command: $BASH_COMMAND"; trap ERR;  exit 1' 
 # 编译后镜像 FISCO-BCOS & WeBASE-Front 的版本，推送的 Docker registry 仓库
 new_tag=""
 latest_tag="latest"
-docker_repository="fiscoorg/front"
+docker_repository="fiscoorg/fisco-webase"
 docker_push="no"
 
 # 指定 WeBASE-Front 账号（开发调试使用）
-git_account="WeBankFinTech"
+git_account="WeBank"
 # WeBASE-Front 的分支
 front_branch=master
 
 # 父镜像 FISCO-BCOS 的版本
-bcos_image_tag="v2.4.0"
+bcos_image_tag="v2.7.0"
 
 # 解析参数
 __cmd="$(basename $0)"
@@ -125,7 +125,7 @@ if [[ ${bcos_image_tag} == *-gm ]] ; then
 fi
 
 # 拉取 WeBASE-Front
-WEBASE_FRONT_GIT="https://github.com/${git_account}/${PROJECT_NAME}.git";
+WEBASE_FRONT_GIT="https://gitee.com/${git_account}/${PROJECT_NAME}.git";
 LOG_INFO "git pull WeBASE-Front's branch: [${front_branch}] from ${WEBASE_FRONT_GIT}"
 git clone -b "${front_branch}" "${WEBASE_FRONT_GIT}" --depth=1
 
@@ -134,12 +134,17 @@ cd "${PROJECT_NAME}" && chmod +x ./gradlew && ./gradlew clean build -x test && c
 rm -rfv ./dist &&  mv -fv ${PROJECT_NAME}/dist . && rm -rf ${PROJECT_NAME}
 mv -fv dist/conf_template dist/conf
 
+# conf里增加sol 0.6支持
+mkdir dist/conf/solcjs
+wget -P dist/conf/solcjs https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/WeBASE/download/solidity/v0.6.10.js
+wget -P dist/conf/solcjs https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/WeBASE/download/solidity/v0.6.10-gm.js
+
 # 修改application.yml 配置
 sed -i "s/encryptType.*#/encryptType: ${encrypt_type} #/g" dist/conf/application.yml
 
 new_image="${docker_repository}":"${new_tag}"
-docker build -f Dockerfile --build-arg BCOS_IMG_VERSION="${bcos_image_tag}" -t "${new_image}" .
-docker tag "${new_image}" ${docker_repository}:"${latest_tag}"
+sudo docker build -f Dockerfile --build-arg BCOS_IMG_VERSION="${bcos_image_tag}" -t "${new_image}" .
+sudo docker tag "${new_image}" ${docker_repository}:"${latest_tag}"
 
 rm -rf dist
 
