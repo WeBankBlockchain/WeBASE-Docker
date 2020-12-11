@@ -157,6 +157,6 @@ sudo docker tag "${new_image}" ${docker_repository}:"${latest_tag}"
 rm -rf dist
 
 if [[ "${docker_push}"x == "yesx" ]] ; then
-    docker push "${docker_repository}":"${new_tag}"
-    docker push "${docker_repository}":"${latest_tag}"
+    sudo docker push "${docker_repository}":"${new_tag}"
+    sudo docker push "${docker_repository}":"${latest_tag}"
 fi
