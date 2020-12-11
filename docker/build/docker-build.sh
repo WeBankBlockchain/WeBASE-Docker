@@ -54,7 +54,7 @@ front_branch=master
 front_version="v1.4.2"
 
 # 父镜像 FISCO-BCOS 的版本
-bcos_image_tag="v2.7.0"
+bcos_image_tag="v2.4.0"
 
 # 解析参数
 __cmd="$(basename $0)"
