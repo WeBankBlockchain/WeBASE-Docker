@@ -150,7 +150,7 @@ nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
  
  4 使用docker启动新节点
 ```bash
-docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/fisco-webase:v2.5.0
 ```
 5 通过调用WeBASE-Front的addSealer接口将新节点加入区块链网络。
 http://172.17.0.1:5002/WeBASE-Front/1/web3/addSealer
