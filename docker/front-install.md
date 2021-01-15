@@ -14,7 +14,7 @@
  1 下载build_chain脚本
  
   ```bash
-   curl -LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/v2.3.0/build_chain.sh && chmod u+x build_chain.sh
+   curl -LO https://github.com/FISCO-BCOS/FISCO-BCOS/releases/download/v2.5.0/build_chain.sh && chmod u+x build_chain.sh
    ```
  
  2 准备配置文件
@@ -58,7 +58,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
  # 自行替换需要的镜像名。  
 
   cd {ip}/node0/
-  docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+  docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front-webase:v2.5.0
 ```
  至此镜像启动成功。
  
