@@ -58,7 +58,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
  # 自行替换需要的镜像名。  
 
   cd {ip}/node0/
-  docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front-webase:v2.5.0
+  docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/fisco-webase:v2.5.0
 ```
  至此镜像启动成功。
  
@@ -84,7 +84,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 
   启动镜像命令需要加上 **-v $PWD/application.yml:/dist/conf/application.yml**， 命令如下：
   ```bash
-   docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+   docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml --network=host -w=/data fiscoorg/fisco-webase:v2.5.0
   ```
   
   
