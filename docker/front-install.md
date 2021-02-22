@@ -67,9 +67,9 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
  - docker ps 查看进程   
  - docker exec -it {containerId} /bin/bash   进入容器
  - 容器里执行/usr/local/bin/fisco-bcos -v 检查节点版本是否正确。
- - 容器里/data目录存放的是节点相关信息，/dist目录主要存放的是前置的相关信息 
- - 前置日志在/dist/log下，
-   执行 tail -f /dist/log/WeBASE-Front.log 可检查日志看是否启动报错。  
+ - 容器里/data目录存放的是节点相关信息，/front目录主要存放的是前置的相关信息 
+ - 前置日志在/front/log下，
+   执行 tail -f /front/log/WeBASE-Front.log 可检查日志看是否启动报错。  
  
  7 修改application.yml （可跳过）
  
@@ -82,9 +82,9 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
   然后在本地修改application.yml。
   front的数据存在h2数据库中，如果需要挂载出来，可以在application.yml中修改h2路径,如修改成"jdbc:h2:file:/data/h2/webasefront"。  
 
-  启动镜像命令需要加上 **-v $PWD/application.yml:/dist/conf/application.yml**， 命令如下：
+  启动镜像命令需要加上 **-v $PWD/application.yml:/front/conf/application.yml**， 命令如下：
   ```bash
-   docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+   docker run -d  -v $PWD:/data -v $PWD/application.yml:/front/conf/application.yml --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
   ```
   
   
