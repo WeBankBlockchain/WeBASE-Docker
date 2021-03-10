@@ -1,18 +1,19 @@
 
 # WeBASE-Docker
- [FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS) + [WeBASE-Front](https://github.com/WeBankFinTech/WeBASE-Front) 镜像和K8s部署。
+ [FISCO BCOS](https://github.com/FISCO-BCOS/FISCO-BCOS)节点 + [WeBASE-Front](https://github.com/WeBankFinTech/WeBASE-Front) 节点前置的镜像构建与使用
  
-  项目主要有三个部分：
-  1. docker目录存放front镜像使用和打包相关文件。  
-    - [front镜像使用文档.md](docker/front-install.md)   
-    - [front镜像打包文档.md](docker/build/front-build.md)
-  
-  2. k8s目录主要存放front镜像k8s部署相关yaml文件。
-  3. nodes-config主要存放相关buildchain和节点相关配置文件。
- 
+项目主要有三个部分：
+1. docker目录存放front镜像使用和打包相关文件。  
+  - [front镜像使用文档.md](docker/front-install.md)，使用fisco-webase镜像时，可参考此文档
+  - [front镜像打包文档.md](docker/build/front-build.md)，需要构建自己的节点+前置的镜像时，参考该文档
+2. k8s目录主要存放front镜像k8s部署相关yaml文件有k8s使用指南。
+3. nodes-config主要存放相关build_chain和节点相关配置文件。
+
+
  ### 1. 镜像简要说明
  front镜像包含了底层镜像和WeBASE-Front的代码,将节点和节点前置放在一起。通过镜像搭建区块链网络需要通过[build_chain.sh](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/build_chain.html) 生成各节点的配置信息。
- 搭建区块链网络前建议阅读以下两部分内容并熟悉buildchain的使用。
+
+ 搭建区块链网络前建议阅读以下两部分内容并熟悉build_chain的使用。
 
  #### 1.1节点网络说明
  
