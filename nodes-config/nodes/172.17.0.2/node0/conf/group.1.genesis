@@ -1,20 +1,29 @@
 [consensus]
-    ; consensus algorithm type, now support PBFT(consensus_type=pbft) and Raft(consensus_type=raft)
+    ; consensus algorithm now support PBFT(consensus_type=pbft), Raft(consensus_type=raft)
+    ; rpbft(consensus_type=rpbft)
     consensus_type=pbft
     ; the max number of transactions of a block
     max_trans_num=1000
+    ; in seconds, block consensus timeout, at least 3s
+    consensus_timeout=3
+    ; rpbft related configuration
+    ; the working sealers num of each consensus epoch
+    epoch_sealer_num=4
+    ; the number of generated blocks each epoch
+    epoch_block_num=1000
     ; the node id of consensusers
-    node.0=61860b824605d1253c15263a538f3614072faee18ba1533d3f7fd2296fe6c4c0becd9462d04cdc21c0c69c6e581220660f8941a829b4cfd089822763b7d96ae0
-    node.1=665883eb607ccdd8e72e47829489e3212a3c77cc1bb300e4bd4c62a70426e97375484c78f1bc609bf987f07c25463ef90a277cfff235c3fe7c98bf3fdcc66dec
-    node.2=2f6fee06220e479fc7ce46c0d2c29bece5c55672a26b3aca8712643c8726dda22d51b35caf9e90ab8f2dc11e7088393cf75e8917ec594341c3d5b3cfe11764d8
-    node.3=f03ad904eb7a2ab9478c813cda5dde0e54c4aa874933e795f996140173a1c7a22cabb491ac8ebeda24c57ac56146ab8d47a37a064dd2b3f0ed76e3be83bf8218
+    node.0=4b55d9cae1ff6d777232f0e2152d677340afad967049ad016c0c5bb52c34d85f71f5697a89925553309604d58a8649369461694fafa210f02dcf4382ccdea0a7
+    node.1=159fd8afaf35b79959413119577f17b4d35e127ec3290b2813256280866a548198a630076b38e54e1d53fd5e284c5a04d8c309a8fa31bde0b6fe404b441e4da3
+    node.2=7bd2ba8a6612830d410dc9e03ff0a7d94626a6fda371dbc3358bb18c86716d99278693af6de17dd4ec441743416bb5fd2159d7411990bfb059060ad3f0ccc08d
+    node.3=04676d96e8e0a3dbb1209f25d2e945f2294d94b085c03d68e32f9f7c1f3a5fc85a42d724ee6784445fabd0ef2475c1c1e2ac4ec6b254a6e6cb8bde7579dc5435
     
 [state]
-    ; support mpt/storage
     type=storage
 [tx]
     ; transaction gas limit
     gas_limit=300000000
 [group]
     id=1
-    timestamp=1563437420000
+    timestamp=1615342798000
+[evm]
+    enable_free_storage=false
