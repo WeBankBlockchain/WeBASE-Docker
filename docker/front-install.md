@@ -53,7 +53,11 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 
 执行成功后的输出：
 ```bash
-[root@node1 docker]# bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
+# 非国密时
+bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d
+# 国密时，以国密为例
+bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
+## 国密示例
 ==============================================================
 Generating CA key...
 Generating Guomi CA key...
@@ -87,18 +91,18 @@ e.g.  bash /root/mars/docker/nodes/172.17.0.1/download_console.sh -f
 [INFO] All completed. Files in /root/mars/docker/nodes
 ```
 
-其中生成的`nodes/cert`目录中包含了该链的ca证书与私钥，机构test的证书与私钥；`nodes/gmcert`则包含了链的国密证书
-- 由于国密链是采用双证书体系，因此包含了两种证书；非国密时只有`nodes/cert`目录
-- 为机构test**扩容节点**时，需要用到`test`目录下的机构证书生成新节点的证书；同理，扩容机构时，也需要用到；
+其中生成的`nodes/cert`目录中包含了该链的ca证书与私钥，机构test的证书与私钥；
+- 国密时，会额外生成包含国密证书的`nodes/gmcert`；由于国密链是采用双证书体系，因此包含了两种证书；非国密时只有`nodes/cert`目录
+- 为机构test**扩容节点**时，需要用到`test`目录下的机构证书生成新节点的证书；
   - 具体的扩容方法可以参考下文的**扩容**章节
 
 以`nodes/172.17.0.1`中的节点为例，生成的内容包含
 - `node0`目录
   - 节点的配置目录`conf`，包含节点的证书与群组配置文件
   - 节点的配置文件`config.ini`
-  - `start.sh/stop.sh`docker模式的启停脚本；具体的启停方式参考下文的**启动**章节
+  - `start.sh/stop.sh`docker模式的启停脚本（非必须）；具体的启停方式参考下文的**启动**章节的docker run命令
 - `sdk`目录
-  - 包含通过javasdk连接节点所需的ssl证书（sdk证书与gm目录中的国密sdk证书）
+  - 包含通过javasdk连接节点所需的ssl证书；sdk目录包含了sdk证书，国密时还额外包含国密sdk证书的`sdk/gm`目录
 
 ## 4. 镜像说明（fisco-webase）
 
@@ -156,7 +160,7 @@ Dockerfile的操作如下：
 
 #### 获取镜像
 
-可以通过front-build文档构建自己的镜像，在Dockerhub上的镜像默认为最新的节点前置版本，如v2.7.2的镜像是由v2.7.2的节点结合最新的v1.5.0前置镜像
+可以通过front-build文档构建自己的镜像，在Dockerhub上的镜像默认为最新的节点前置版本，如v2.7.2的镜像是由v2.7.2的节点结合最新的v1.5.0前置镜像，所以镜像版本为v2.7.2
 
 拉取镜像：
 ```
@@ -164,7 +168,7 @@ docker pull fiscoorg/fisco-webase:v2.7.2
 ```
 
 ### 启动
- 至此区块链网络各节点的配置已生成，将nodes下各节点目录即nodes/{ip}拷贝到对应ip机器上。
+至此区块链网络各节点的配置已生成，将nodes下各节点目录（即`nodes/{ip}`）拷贝到对应ip机器上。
  
 #### 修改节点前置的application.yml （可跳过）
 
@@ -179,7 +183,7 @@ cp -r ./docker/application.yml nodes/{ip}/node0/
 - 其中`keyServer`签名任务的地址,`sdk.ip`和`sdk.channelPort`根据实际节点的配置进行修改
 - front的数据存在h2数据库中，如果需要挂载出来，可以在application.yml中修改h2路径，如 将默认的`jdbc:h2:file:../h2/webasefront`修改成`jdbc:h2:file:/data/h2/webasefront`（因为容器内的/data目录会在启动的时候挂载到宿主机）
 
-启动镜像的命令需要加上 **-v $PWD/application.yml:/front/conf/application.yml**，可以参考下文的完整启动命令
+启动镜像的命令需要加上 `-v $PWD/application.yml:/front/conf/application.yml`，可以参考下文的完整docker容器启动命令
 
 #### 启动容器
 然后在各自机器上启动容器，指令如下：
@@ -210,9 +214,11 @@ cp -r ./docker/application.yml nodes/{ip}/node0/
 
 使用build_chain建链时生成的自签CA来生成新的机构证书；若使用已有机构进行节点扩容，可跳过本小节
 
-获取gen_agency_cert脚本
+获取gen_agency_cert机构证书生成脚本
 ```
 curl -#LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/master/tools/gen_agency_cert.sh && chmod u+x gen_node_cert.sh
+# 下载过慢时可以使用国内镜像
+curl -#LO https://gitee.com/FISCO-BCOS/FISCO-BCOS/raw/master/tools/gen_agency_cert.sh&& chmod u+x gen_node_cert.sh
 ```
 
 执行生成的参数
@@ -223,7 +229,7 @@ curl -#LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/master/tools/g
 ```Bash
 ## 非国密时
 bash gen_agency_cert.sh -c nodes/cert/ -a newAgencyName
-## 国密时
+## 国密时，以国密为例
 bash gen_agency_cert.sh -c nodes/cert/ -a newAgencyName -g nodes/gmcert/
 ## 国密示例
 ==============================================================
@@ -234,10 +240,10 @@ bash gen_agency_cert.sh -c nodes/cert/ -a newAgencyName -g nodes/gmcert/
 
 ### 2.2 签发新的节点证书
 
-build_chain建链时使用自签ca，**所有ca.key以及机构私钥位于nodes/cert目录**，请妥善保管**nodes/cert目录**中的文件。
-- 国密时，将同时生成`gmcert`目录存放国密证书
+build_chain建链时使用自签ca，**所有链证书与私钥、机构证书及私钥位于nodes/cert目录**，请妥善保管**nodes/cert目录**中的文件。
+- 国密时，将同时生成`gmcert`目录存放国密的链证书与私钥、机构证书及私钥
 
-下面介绍签发证书所使用的脚本`gen_node_cert.sh`，以使用test机构签发新的证书为例。
+下面介绍签发证书所使用的脚本`gen_node_cert.sh`，以使用test机构签发新的节点证书私钥（国密）为例。
 
 1 下载gen_node_cert.sh
 
@@ -265,7 +271,7 @@ bash gen_node_cert.sh -c nodes/cert/test -o newNodeGm -g nodes/gmcert/test/
 [INFO] Output Dir  : newNodeGm
 ==============================================================
 [INFO] All completed. Files in newNodeGm
-### -s生成国密sdk证书
+### -s 生成国密sdk证书
 bash gen_node_cert.sh -c nodes/cert/test -o newNodeGmSDK -g nodes/gmcert/test/ -s
 ==============================================================
 [INFO] Cert Path   : nodes/cert/test
@@ -282,8 +288,15 @@ bash gen_node_cert.sh -c nodes/cert/test -o newNodeGmSDK -g nodes/gmcert/test/ -
 --newNodeGm
   --conf
     --gmca.crt
-...
+    --gmnode.crt
+    ...
 ```
+
+为群组1扩容新节点，还需要将节点的配置文件拷贝到`newNodeGm/conf`目录中，包含：
+- 拷贝节点与群组配置文件
+- sdk证书
+- 修改节点的.ini配置文件
+- 修改front的.yml配置文件
 
 #### 1 节点配置文件：
 
@@ -304,18 +317,21 @@ nodes/172.17.0.1/node0/conf/group.1.ini ->> newNodeGm/conf/group.1.ini
 - 若**生成了新机构的新节点，则需要使用新的SDK证书**；否则直接复制已有的节点的SDK证书即可
 
 ```bash
-  cp -r nodes/172.17.0.1/node0/sdk/ newNodeGm/ 
+# 使用旧机构
+cp -r nodes/172.17.0.1/node0/sdk newNodeGm/ 
+# 使用新机构，直接将生成的newNodeGmSdk重命名为sdk
+cp -r newNodeGm/newNodeGmSdk newNodeGm/sdk
 ```
 
-docker容器启动时，会**自动**拷贝节点目录中的sdk目录`/data/sdk`到前置的配置目录`/front/conf`
+docker容器启动时，容器启动脚本，会**自动**拷贝节点目录中的sdk目录`/data/sdk`到前置的配置目录`/front/conf`，用于节点前置的javasdk连接节点使用
 
 #### 3 修改新节点config.ini
 
 - 修改`rpc`与`p2p`模块监听的IP和端口
-- 将已有节点的IP端口添加到`p2p`的`nodes to connect`列表中
-- 国密时
+- 将已有节点的IP端口添加到`p2p`的`node.0, node.1`列表中，保证新节点可连上已有节点
+- **国密时**
   - 确保`network_security`的节点证书和节点私钥要由`node开头`改为`gmnode开头`，同理`ca.crt`改为`gmca.crt`
-  - 确保`chain.sm_type`要与节点的国密与非国密类型匹配
+  - 确保`chain.sm_crypto`要与节点的国密类型匹配，国密时`sm_crypto=true`
 ``` 
  $ vim newNodeGm/config.ini
  [rpc]
@@ -363,14 +379,26 @@ cp nodes/172.17.0.1/node0/application.yml newNodeGm/
 ```
 
 修改application.yml
-- 其中`keyServer`签名任务的地址,`sdk.ip`和`sdk.channelPort`根据实际节点的配置进行修改
+- 其中`keyServer`签名服务的IP端口（不能是127.0.0.1）,`sdk.ip`和`sdk.channelPort`根据实际节点的配置进行修改
 - front的数据存在h2数据库中，如果需要挂载出来，可以在application.yml中修改h2路径，如 将默认的`jdbc:h2:file:../h2/webasefront`修改成`jdbc:h2:file:/data/h2/webasefront`（因为容器内的/data目录会在启动的时候挂载到宿主机）
+- 如需修改前置的默认服务端口，则需要修改`server.port`配置，并在启动容器时加上新的端口映射`docker run -p {newFrontPort}`
+```
+sdk:
+  ip: 127.0.0.1
+  channelPort: 20200
+...
+...
+constant:
+  keyServer: 127.0.0.1:5004 # webase-sign服务的IP:Port
+  ...
+```
 
 
 #### 5 使用docker启动新节点
 
+将新节点传输到指定机器后，进入新节点的目录，指定docker run命令启动即可
 ```bash
-  cd {ip}/node0/
+  cd /data/newNodeGm/
   docker run -d -v /data/newNodeGm:/data -v /data/newNodeGm/application.yml:/front/conf/application.yml -v /data/newNodeGm/sdk:/data/sdk -v /data/newNodeGm/front-log:/front/log --network=host -w=/data fiscoorg/fisco-webase:v2.7.2
 ```
 #### 6 检查 
