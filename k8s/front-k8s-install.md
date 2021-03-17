@@ -45,6 +45,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 
   1 生成各节点配置：
   请将**build.chain**脚本生成的配置在nodes-config目录下。生成配置拷贝到k8s集群的各个主机上。方便节点启动读取配置。
+  - 本项目中的node-config仅作目录参考，需要自行生成新的配置
   
   2 k8s部署的yaml文件在bcos_kubernetes目录下，有相应的deployment.yaml和service.yaml。
    分别使用

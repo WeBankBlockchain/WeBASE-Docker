@@ -19,7 +19,7 @@ if [ -n "${node_pid}" ];then
     echo " ${node} is running, container id is $node_pid."
     exit 0
 else
-    docker run -d --rm --name ${SHELL_FOLDER//\//} -v ${SHELL_FOLDER}:/data --network=host -w=/data fiscoorg/fiscobcos:v2.7.1 -c config.ini
+    docker run -d --rm --name ${SHELL_FOLDER//\//} -v ${SHELL_FOLDER}:/data --network=host -w=/data fiscoorg/fiscobcos:v2.7.2 -c config.ini
     sleep 1.5
 fi
 try_times=4
