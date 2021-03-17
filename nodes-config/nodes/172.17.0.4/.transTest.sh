@@ -1,3 +1,16 @@
+#!/bin/bash
+SHELL_FOLDER=$(cd $(dirname $0);pwd)
+
+LOG_ERROR() {
+    content=${1}
+    echo -e "\033[31m[ERROR] ${content}\033[0m"
+}
+
+LOG_INFO() {
+    content=${1}
+    echo -e "\033[32m[INFO] ${content}\033[0m"
+}
+
 # This script only support for block number smaller than 65535 - 256
 
 ip_port=http://127.0.0.1:8545
@@ -47,7 +60,7 @@ send_many_tx()
     for j in $(seq 1 $1)
     do
         echo 'Send transaction: ' $j
-        send_a_tx ${ip_port} 
+        send_a_tx ${ip_port}
     done
 }
 getNodeVersion
