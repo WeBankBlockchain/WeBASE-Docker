@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: peer0-org3
-        image: fiscoorg/front:bsn-0.2.0-gm
+        image: fiscoorg/front:latest
         ports:
         - containerPort: 8545
         - containerPort: 20200
@@ -36,10 +36,10 @@ spec:
       volumes:
       - name: peer0-org3-conf
         hostPath:
-          path: /root/nodes/fisco-2/node0
+          path: /root/nodes/172.18.255.22/node0
       - name: peer0-org3-frontlog
         hostPath:
-          path: /root/nodes/fisco-2/frontlog
+          path: /root/nodes/172.18.255.22/frontlog
       - name: peer0-org3-appconf
         hostPath:
           path: /root/nodes/application.yml
@@ -53,7 +53,7 @@ metadata:
     io.kompose.service: peer0.org3
   name: peer0-org3
 spec:
-  clusterIP: 172.18.255.21
+  clusterIP: 172.18.255.22
   ports:
   - name: rpc
     port: 8545

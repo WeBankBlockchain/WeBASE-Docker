@@ -38,7 +38,7 @@ EOF
 # -d 使用docker模式
 # -g 国密
 # -S 资源统计
-bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
+bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d
 ```
  执行后会生成nodes目录，nodes目录包含各节点配置。
 
@@ -58,7 +58,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
  # 自行替换需要的镜像名。  
 
   cd {ip}/node0/
-  docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+  docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:latest
 ```
  至此镜像启动成功。
  
@@ -84,7 +84,7 @@ bash build_chain.sh -f nodeconf -p 30300,20200,8545 -o nodes -d -g
 
   启动镜像命令需要加上 **-v $PWD/application.yml:/dist/conf/application.yml**， 命令如下：
   ```bash
-   docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+   docker run -d  -v $PWD:/data -v $PWD/application.yml:/dist/conf/application.yml --network=host -w=/data fiscoorg/front:latest
   ```
   
   
@@ -110,7 +110,11 @@ curl -LO https://raw.githubusercontent.com/FISCO-BCOS/FISCO-BCOS/master/tools/ge
 # -o输出到指定文件夹，其中newNode/conf中会存在机构test新签发的证书和私钥
 # -g 国密
  
-bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
+非国密
+bash gen_node_cert.sh -c nodes/cert/test -o newNode
+
+国密
+bash gen_node_cert.sh -c nodes/cert/test -o newNodeGm -g nodes/gmcert/test/
 ```
 
 #### 2.2 为群组1扩容节点
@@ -118,9 +122,16 @@ bash gen_node_cert.sh -c nodes/cert/agency -o newNodeGm -g nodes/gmcert/agency/
  1 根据步骤为新节点生成证书，拷贝下述文件到新节点文件夹。
 
 ```bash
+非国密
+nodes/172.17.0.1/node0/config.ini >> newNode/config.ini
+nodes/172.17.0.1/node0/conf/group.1.genesis >> newNode/conf/group.1.genesis
+nodes/172.17.0.1/node0/conf/group.1.ini >> newNode/conf/group.1.ini
+
+国密
 nodes/172.17.0.1/node0/config.ini >> newNodeGm/config.ini
 nodes/172.17.0.1/node0/conf/group.1.genesis >> newNodeGm/conf/group.1.genesis
 nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
+
 ```
 
  2 跟上述步骤3类似，拷贝sdk证书到新的节点目录，
@@ -150,7 +161,7 @@ nodes/172.17.0.1/node0/conf/group.1.ini >> newNodeGm/conf/group.1.ini
  
  4 使用docker启动新节点
 ```bash
-docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:bsn-0.2.0-gm
+docker run -d  -v ${PWD}:/data --network=host -w=/data fiscoorg/front:latest
 ```
 5 通过调用WeBASE-Front的addSealer接口将新节点加入区块链网络。
 http://172.17.0.1:5002/WeBASE-Front/1/web3/addSealer

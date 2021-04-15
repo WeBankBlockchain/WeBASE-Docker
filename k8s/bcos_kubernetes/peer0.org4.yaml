@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: peer0-org4
-        image: fiscoorg/front:bsn-0.2.0-gm
+        image: fiscoorg/front:latest
         ports:
         - containerPort: 8545
         - containerPort: 20200
@@ -36,10 +36,10 @@ spec:
       volumes:
       - name: peer0-org4-conf
         hostPath:
-          path: /root/nodes/fisco-3/node0
+          path: /root/nodes/172.18.255.23/node0
       - name: peer0-org4-frontlog
         hostPath:
-          path: /root/nodes/fisco-3/frontlog
+          path: /root/nodes/172.18.255.23/frontlog
       - name: peer0-org4-appconf
         hostPath:
           path: /root/nodes/application.yml

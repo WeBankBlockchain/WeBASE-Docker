@@ -11,7 +11,11 @@
   cp ./start.sh ./dist/
   cp -r ./dist/conf_template ./dist/conf
 
- echo "此次镜像tag: $2"
+
+ echo "底层镜像: "
+ sed -n '1p' Dockerfile | awk '{print $2}'
+
+ echo "此次front镜像tag: $2"
  docker build -t  front:$2 .
  docker tag  front:$2 fiscoorg/front:$2
  rm -rf dist

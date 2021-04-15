@@ -3,5 +3,6 @@
 *.iml
 dist
 .DS_Store
+jdk-8u211-linux-x64.tar.gz
 
 

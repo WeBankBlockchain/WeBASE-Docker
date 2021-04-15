@@ -4,10 +4,11 @@
  
   项目主要有三个部分：
   1. docker目录存放front镜像使用和打包相关文件。  
-    - [front镜像使用文档.md](docker/front-install.md)   
-    - [front镜像打包文档.md](docker/build/front-build.md)
+    - [front镜像使用文档](docker/front-install.md)   
+    - [front镜像打包文档](docker/build/front-build.md)
   
-  2. k8s目录主要存放front镜像k8s部署相关yaml文件。
+  2. k8s目录主要存放front镜像k8s部署相关yaml文件。  
+    - [front镜像K8S部署参考文档](k8s/front-k8s-install.md)   
   3. nodes-config主要存放相关buildchain和节点相关配置文件。
  
  ### 1. 镜像简要说明
