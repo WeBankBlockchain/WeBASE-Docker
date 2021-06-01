@@ -121,9 +121,9 @@ rm -rfv ./dist &&  mv -fv ${PROJECT_NAME}/dist . && rm -rf ${PROJECT_NAME}
 mv -fv dist/conf_template dist/conf
 
 # # conf里增加sol 0.6支持
-mkdir dist/conf/solcjs
-wget -P dist/conf/solcjs https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/WeBASE/download/solidity/v0.6.10.js
-wget -P dist/conf/solcjs https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/WeBASE/download/solidity/v0.6.10-gm.js
+#mkdir dist/conf/solcjs
+#wget -P dist/conf/solcjs https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/WeBASE/download/solidity/v0.6.10.js
+#wget -P dist/conf/solcjs https://osp-1257653870.cos.ap-guangzhou.myqcloud.com/WeBASE/download/solidity/v0.6.10-gm.js
 
 new_image="${docker_repository}":"${new_tag}"
 sudo docker build -f Dockerfile --build-arg BCOS_IMG_VERSION="${bcos_image_tag}" -t "${new_image}" .

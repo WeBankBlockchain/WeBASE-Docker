@@ -26,6 +26,8 @@ COPY ["docker-start.sh", "/docker-start.sh"]
 COPY ["dist/*.sh", "/front/"]
 COPY ["dist/lib/", "/front/lib/"]
 COPY ["dist/conf/", "/front/conf/"]
+COPY ["dist/static/", "/front/static/"]
+COPY ["dist/gradle/", "/front/gradle/"]
 COPY ["dist/apps/", "/front/apps/"]
 
 # expose port
